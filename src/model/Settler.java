@@ -7,11 +7,13 @@ public class Settler {
     private Set<Settler> badRelations;
     private Resource[] preferences;
     private Resource affectation;
+    private int affectationRank;
 
     public Settler(String name, Set<Settler> badRelations, Resource[] preferences) {
         this.name = name;
         this.badRelations = badRelations;
         this.preferences = preferences;
+        this.affectationRank = -1;
     }
 
     public Settler(String name, Resource[] preferences) {
@@ -32,6 +34,7 @@ public class Settler {
 
     public void setAffectation(Resource affectation) {
         this.affectation = affectation;
+        this.affectationRank = Arrays.asList(preferences).indexOf(affectation);
     }
 
     public String getName() {
@@ -68,6 +71,12 @@ public class Settler {
 
     public void setPreferences(Resource[] preferences) {
         this.preferences = preferences;
+    }
+
+    public int getAffectationRank() { return affectationRank; }
+
+    public boolean isJealous() {
+        return affectation != null && badRelations.stream().anyMatch(enemy -> enemy.getAffectationRank() < affectationRank);
     }
 
     @Override

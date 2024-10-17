@@ -31,6 +31,29 @@ public class Simulation {
         }
     }
 
+    public void showJealous() {
+        for(Settler s : settlers.values()) {
+            if(s.isJealous()) System.out.println(s.getName() + " is jealous");
+        }
+    }
+
+    public void switchAffectations(String sn1, String sn2) {
+        Settler s1 = settlers.get(sn1);
+        Settler s2 = settlers.get(sn2);
+
+        if (s1 == null) throw new IllegalArgumentException("Settler '" + sn1 + "' does not exist");
+        if (s2 == null) throw new IllegalArgumentException("Settler '" + sn2 + "' does not exist");
+
+        Resource rs1 = s1.getAffectation();
+        Resource rs2 = s2.getAffectation();
+
+        if (rs1 == null) throw new IllegalArgumentException("Settler '" + sn1 + "' does not have any resource");
+        if (rs2 == null) throw new IllegalArgumentException("Settler '" + sn2 + "' does not have any resource");
+
+        s1.setAffectation(rs2);
+        s2.setAffectation(rs1);
+    }
+
     public void affect(String settlerName, String resourceName) {
         Resource resource = resources.get(resourceName);
 

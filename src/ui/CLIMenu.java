@@ -1,5 +1,6 @@
 package ui;
 
+import env.Dispatcher;
 import env.Simulation;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ public class CLIMenu {
         try {
             init();
             showMainMenu();
+            showSubMenu();
         } catch(QuitException ie) {
             System.out.println(ie.getMessage());
         }
@@ -81,8 +83,48 @@ public class CLIMenu {
             }
         } while(!correct);
 
-        System.out.println("Everything seems completed! Now, we're gonna find a solution");
+        System.out.println("/!\\\nEverything seems completed! Now, we're gonna find a solution\n");
+        Dispatcher dispatcher = new Dispatcher(simulation);
+        dispatcher.linearDispatch();
+        simulation.showSettlers();
+    }
 
+    private void showSubMenu() {
+        System.out.println("Now you can change affectations and see jealous settlers");
+        do {
+            System.out.println("\nPlease select an option : " +
+                    "\n\t1. switch affectations between 2 settlers" +
+                    "\n\t2. see all jealous settlers");
+            String res = reader.readInput();
+
+            switch(res) {
+                case "1":
+                    askSwitch();
+                    break;
+                case "2":
+                    simulation.showJealous();
+                    break;
+                default:
+                    System.out.println("Invalid input (select 1 or 2)");
+                    break;
+            }
+        } while(true);
+
+    }
+
+    private void askSwitch() {
+        boolean correct = false;
+        do {
+            System.out.println("Please enter the 2 settlers to switch resources (in example : A B) :");
+
+            try {
+                String[] args =  reader.readArguments(2);
+                simulation.switchAffectations(args[0], args[1]);
+                correct = true;
+            } catch(InputException | IllegalArgumentException il) {
+                System.out.println(il.getMessage());
+            }
+        } while(!correct);
     }
 
     private void askRelations() {
