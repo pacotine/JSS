@@ -25,6 +25,7 @@ public class Settler {
     }
 
     public void addBadRelation(Settler settler) {
+        if(settler.equals(this)) throw new IllegalArgumentException("A settler cannot detests his-self");
         badRelations.add(settler);
     }
 

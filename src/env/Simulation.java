@@ -17,6 +17,26 @@ public class Simulation {
         init(n);
     }
 
+    public static Simulation random(int n) {
+        Simulation simulation = new Simulation(n);
+        Random r = new Random();
+        List<Resource> resourcesList = Arrays.asList(simulation.resources.values().toArray(Resource[]::new));
+        for(int i = 0; i < n; i++) {
+            String s1;
+            String s2;
+            do {
+                s1 = String.valueOf(ALPHABET[1+r.nextInt(n-1)]);
+                s2 = String.valueOf(ALPHABET[1+r.nextInt(n-1)]);
+            } while(s1.equals(s2));
+
+            simulation.setBadRelations(s1, s2);
+            Collections.shuffle(resourcesList);
+            simulation.getSettlers().get(i).setPreferences(resourcesList.toArray(Resource[]::new));
+        }
+
+        return simulation;
+    }
+
     private void init(int n) {
         for(int i = 1; i <= n; i++) {
             String sn = String.valueOf(ALPHABET[i-1]);

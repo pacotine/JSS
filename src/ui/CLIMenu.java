@@ -4,7 +4,6 @@ import env.Dispatcher;
 import env.Simulation;
 
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class CLIMenu {
     private Simulation simulation;
@@ -18,7 +17,8 @@ public class CLIMenu {
 
     public void start() {
         try {
-            init();
+            //init()
+            initRandom();
             showMainMenu();
             showSubMenu();
         } catch(QuitException ie) {
@@ -29,6 +29,10 @@ public class CLIMenu {
     private void init() {
         int n = askN();
         if(n != -1) this.simulation = new Simulation(n);
+    }
+
+    private void initRandom() {
+        this.simulation = Simulation.random(26);
     }
 
     private int askN() {
@@ -100,6 +104,7 @@ public class CLIMenu {
             switch(res) {
                 case "1":
                     askSwitch();
+                    simulation.showSettlers();
                     break;
                 case "2":
                     simulation.showJealous();
