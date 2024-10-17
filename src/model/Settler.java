@@ -54,6 +54,18 @@ public class Settler {
         return preferences;
     }
 
+    public boolean checkPreferences(int n) {
+        try {
+            return Set.of(preferences).size() == n;
+        } catch(NullPointerException ne) {
+            System.out.println("Settler " + name + " : no preferences set");
+            return false;
+        } catch(IllegalArgumentException ie) {
+            System.out.println("Settler " + name + " : invalid order of preferences (duplicates)");
+            return false;
+        }
+    }
+
     public void setPreferences(Resource[] preferences) {
         this.preferences = preferences;
     }

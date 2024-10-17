@@ -75,6 +75,15 @@ public class Simulation {
         s.setPreferences(preferences);
     }
 
+    public boolean checkIfStable() {
+        boolean correct = true;
+        int n = resources.size();
+        for(Settler settler : settlers.values()) {
+            if(!settler.checkPreferences(n)) correct = false;
+        }
+        return correct;
+    }
+
     public Map<String, Resource> getResources() {
         return resources;
     }

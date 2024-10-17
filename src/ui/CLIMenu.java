@@ -7,8 +7,10 @@ import java.util.Scanner;
 
 public class CLIMenu {
     private Simulation simulation;
+    private CLIReader reader;
 
     public CLIMenu() {
+        this.reader = new CLIReader();
         System.out.println("Hello, welcome to the JSS program (CLI version) \\o/\n" +
                 "If you want to close this program, enter 'quit'\n");
     }
@@ -27,23 +29,16 @@ public class CLIMenu {
         if(n != -1) this.simulation = new Simulation(n);
     }
 
-    private static int askN() {
+    private int askN() {
         int n;
-        Scanner scanner = new Scanner(System.in);
-        String res;
         boolean correct = false;
 
         do {
-            n = -1;
             System.out.println("Please enter how many settlers does your colony have :");
-            res = scanner.next();
-            if(res.equals("quit")) {
-                throw new QuitException(scanner);
-            }
+            n = reader.readInteger();
 
             try {
-                n = Integer.parseInt(res);
-                if(n < 1 || n > 26) throw new InputException("Your colony should be between 1 and 26 people", res);
+                if(n < 1 || n > 26) throw new InputException("Your colony should be between 1 and 26 people", String.valueOf(n));
                 else correct = true;
             } catch(NumberFormatException ne) {
                 System.out.println("Sorry, but this is not a number");
@@ -61,8 +56,6 @@ public class CLIMenu {
             init();
         }
 
-        Scanner scanner = new Scanner(System.in);
-        String res;
         boolean correct = false;
         do {
             simulation.showSettlers();
@@ -70,45 +63,51 @@ public class CLIMenu {
                     "\n\t1. add a relation between two settlers" +
                     "\n\t2. add preferences to a settler" +
                     "\n\t3. confirm");
-            res = scanner.next();
-
-            if(res.equals("quit")) {
-                throw new QuitException(scanner);
-            }
+            String res = reader.readInput();
 
             switch(res) {
                 case "1":
-                    askRelations(scanner);
+                    askRelations();
                     break;
                 case "2":
+                    askPreferences();
                     break;
                 case "3":
-                    //check
-                    correct = true;
+                    correct = simulation.checkIfStable();
                     break;
                 default:
-                    System.out.println("Invalid input");
+                    System.out.println("Invalid input (select 1, 2 or 3)");
                     break;
             }
         } while(!correct);
 
-        //compute...
+        System.out.println("Everything seems completed! Now, we're gonna find a solution");
 
     }
 
-    private void askRelations(Scanner scanner) {
+    private void askRelations() {
         boolean correct = false;
-        String res = "";
         do {
             System.out.println("Please enter the toxic relation between 2 settlers (in example : A B) :");
 
-            do res = scanner.nextLine();
-            while (res.isEmpty());
+            try {
+                String[] args =  reader.readArguments(2);
+                simulation.setBadRelations(args[0], args[1]);
+                correct = true;
+            } catch(InputException | IllegalArgumentException il) {
+                System.out.println(il.getMessage());
+            }
+        } while(!correct);
+    }
+
+    private void askPreferences() {
+        boolean correct = false;
+        do {
+            System.out.println("Please enter the preferences of a settler (in example : A R1 R3 R2) :");
 
             try {
-                String[] sep = res.split(" ");
-                if(sep.length != 2) throw new InputException("Input should have 2 names (like 'A B')", Arrays.toString(sep));
-                simulation.setBadRelations(sep[0], sep[1]);
+                String[] args =  reader.readArguments(simulation.getSettlers().size()+1);
+                simulation.setSettlerPreferences(args[0], Arrays.copyOfRange(args, 1, args.length));
                 correct = true;
             } catch(InputException | IllegalArgumentException il) {
                 System.out.println(il.getMessage());
