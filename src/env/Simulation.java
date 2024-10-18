@@ -52,9 +52,14 @@ public class Simulation {
     }
 
     public void showJealous() {
+        int sum = 0;
         for(Settler s : settlers.values()) {
-            if(s.isJealous()) System.out.println(s.getName() + " is jealous");
+            if(s.isJealous()) {
+                sum++;
+                System.out.println(s.getName() + " is jealous");
+            }
         }
+        System.out.println("\nThere are " + sum + " jealous settlers");
     }
 
     public void switchAffectations(String sn1, String sn2) {
