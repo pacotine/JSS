@@ -77,7 +77,11 @@ public class Settler {
     public int getAffectationRank() { return affectationRank; }
 
     public boolean isJealous() {
-        return affectation != null && badRelations.stream().anyMatch(enemy -> enemy.getAffectationRank() < affectationRank);
+        if(affectation != null) {
+            List<Resource> dreams = Arrays.asList(preferences).subList(0, affectationRank);
+            return badRelations.stream().anyMatch(enemy -> dreams.contains(enemy.getAffectation()));
+        }
+        return false;
     }
 
     @Override
