@@ -17,8 +17,9 @@ public class CLIMenu {
 
     public void start() {
         try {
-            //init()
+            //init();
             initRandom();
+            //initDev();
             showMainMenu();
             showSubMenu();
         } catch(QuitException ie) {
@@ -31,8 +32,27 @@ public class CLIMenu {
         if(n != -1) this.simulation = new Simulation(n);
     }
 
+    private void initDev() {
+        this.simulation = new Simulation(6);
+        String[] r = new String[6];
+        for(int i = 0; i < 6; i++) {
+            r[i] = "R"+(i+1);
+        }
+
+        simulation.setSettlerPreferences("A", r[1], r[2], r[3], r[4], r[5], r[0]);
+        simulation.setSettlerPreferences("B", r[1], r[2], r[3], r[4], r[5], r[0]);
+        simulation.setSettlerPreferences("C", r[1], r[2], r[3], r[4], r[5], r[0]);
+        simulation.setSettlerPreferences("D", r[1], r[2], r[3], r[4], r[5], r[0]);
+        simulation.setSettlerPreferences("E", r[1], r[2], r[3], r[4], r[5], r[0]);
+        simulation.setSettlerPreferences("F", r[1], r[2], r[3], r[4], r[5], r[0]);
+
+        simulation.setBadRelations("A", "B");
+        simulation.setBadRelations("B", "C");
+        simulation.setBadRelations("E", "C");
+    }
+
     private void initRandom() {
-        this.simulation = Simulation.random(26);
+        this.simulation = Simulation.random(1000);
     }
 
     private int askN() {
@@ -89,8 +109,13 @@ public class CLIMenu {
 
         System.out.println("/!\\\nEverything seems completed! Now, we're gonna find a solution\n");
         Dispatcher dispatcher = new Dispatcher(simulation);
+        System.out.println("Linear dispatch : ");
         dispatcher.linearDispatch();
-        simulation.showSettlers();
+        simulation.showJealous();
+        System.out.println("MAX-LEF dispatch : ");
+        dispatcher.maxLEFDispatch();
+        simulation.showJealous();
+        //simulation.showSettlers();
     }
 
     private void showSubMenu() {

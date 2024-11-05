@@ -25,11 +25,13 @@ public class Simulation {
             String s1;
             String s2;
             do {
-                s1 = String.valueOf(ALPHABET[1+r.nextInt(n-1)]);
-                s2 = String.valueOf(ALPHABET[1+r.nextInt(n-1)]);
-            } while(s1.equals(s2));
+                int r1 = 1 + r.nextInt(n - 1);
+                s1 = String.valueOf(ALPHABET[r1%26])+((r1-1)/26+1);
+                int r2 = 1 + r.nextInt(n - 1);
+                s2 = String.valueOf(ALPHABET[r2%26])+((r2-1)/26+1);
+            } while (s1.equals(s2));
 
-            simulation.setBadRelations(s1, s2);
+                simulation.setBadRelations(s1, s2);
             Collections.shuffle(resourcesList);
             simulation.getSettlers().get(i).setPreferences(resourcesList.toArray(Resource[]::new));
         }
@@ -39,10 +41,12 @@ public class Simulation {
 
     private void init(int n) {
         for(int i = 1; i <= n; i++) {
-            String sn = String.valueOf(ALPHABET[i-1]);
+            String sn = String.valueOf(ALPHABET[(i-1)%26])+((i-1)/26+1);
             resources.put("R" + i, new Resource("R"+i));
+            System.out.println(i + "/" + sn + "/" + settlers.containsKey(sn));
             settlers.put(sn, new Settler(sn, n));
         }
+        System.out.println(settlers.keySet());
     }
 
     public void showSettlers() {
