@@ -17,21 +17,22 @@ public class Simulation {
         init(n);
     }
 
-    public static Simulation random(int n) {
+    public static Simulation random(int n, int d) {
+        //d is density of the graph
+        assert d < n;
+
         Simulation simulation = new Simulation(n);
         Random r = new Random();
         List<Resource> resourcesList = Arrays.asList(simulation.resources.values().toArray(Resource[]::new));
+        List<String> settlersKeys = new ArrayList<>(simulation.getSettlersMap().keySet());
         for(int i = 0; i < n; i++) {
-            String s1;
-            String s2;
-            do {
-                int r1 = 1 + r.nextInt(n - 1);
-                s1 = String.valueOf(ALPHABET[r1%26])+((r1-1)/26+1);
-                int r2 = 1 + r.nextInt(n - 1);
-                s2 = String.valueOf(ALPHABET[r2%26])+((r2-1)/26+1);
-            } while (s1.equals(s2));
+            Collections.shuffle(settlersKeys);
+            int rand = r.nextInt(d);
+            String siKey = settlersKeys.get(i);
+            for(String badKey : settlersKeys.subList(0, rand)) {
+                if(!siKey.equals(badKey)) simulation.setBadRelations(siKey, badKey);
+            }
 
-                simulation.setBadRelations(s1, s2);
             Collections.shuffle(resourcesList);
             simulation.getSettlers().get(i).setPreferences(resourcesList.toArray(Resource[]::new));
         }
@@ -64,6 +65,16 @@ public class Simulation {
             }
         }
         System.out.println("\nThere are " + sum + " jealous settlers");
+    }
+
+    public int getJealousNumber() {
+        int sum = 0;
+        for(Settler s : settlers.values()) {
+            if(s.isJealous()) {
+                sum++;
+            }
+        }
+        return sum;
     }
 
     public void switchAffectations(String sn1, String sn2) {
@@ -134,6 +145,21 @@ public class Simulation {
             if(!settler.checkPreferences(n)) correct = false;
         }
         return correct;
+    }
+
+    public void clearAffectations() {
+        for(Settler s : settlers.values()) {
+            s.setAffectation(null);
+        }
+        for(Resource r : resources.values()) {
+            r.setAffected(false);
+        }
+    }
+
+    public void setAffectations(Map<String, Resource> affectations) {
+        for(String s : affectations.keySet()) {
+            settlers.get(s).setAffectation(affectations.get(s));
+        }
     }
 
     public Map<String, Resource> getResources() {

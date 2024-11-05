@@ -25,34 +25,87 @@ public class Dispatcher {
         }
     }
 
+    /*
     public void maxLEFDispatch() {
-        Set<Settler> I = new HashSet<>();
-        Queue<Settler> N = new ArrayDeque<>(simulation.getSettlers());
-        Set<Settler> NI = new HashSet<>();
-        Set<String> O = simulation.getResources().keySet();
+        List<Settler> settlers = new ArrayList<>(simulation.getSettlers());
 
-        while(!N.isEmpty()) {
-            Settler settler = N.poll();
-            I.add(settler);
-            Set<Settler> neighbors = settler.getBadRelations();
-            N.removeAll(neighbors);
+        int m = settlers.size();
+        Map<String, Resource> bestAffectation = new HashMap<>();
 
-            NI.addAll(neighbors);
+        for(int i = 0; i < settlers.size(); i++) {
+            Collections.shuffle(settlers);
+            Set<Settler> N = new HashSet<>(settlers);
+            Set<String> O = new HashSet<>(simulation.getResources().keySet());
+
+            System.out.println("shuffle : " + settlers.stream().map(Settler::getName).toList()
+                    + " with O = " + O + "/" + simulation.getResources());
+            maxIndependentSet(N, O);
+
+            int j = simulation.getJealousNumber();
+            System.out.println("j = " + j + " | m = " + m);
+            if(j < m) {
+                m = j;
+                for(Settler s : settlers) {
+                    bestAffectation.put(s.getName(), s.getAffectation());
+                }
+            }
+
+            simulation.clearAffectations();
         }
 
+        System.out.println("Best affectation found with j = " + m + " : " + bestAffectation);
+        simulation.setAffectations(bestAffectation);
+    }
+    */
+
+    public void maxLEFDispatch() {
+        Set<Settler> N = new HashSet<>(simulation.getSettlers());
+        Set<String> O = new HashSet<>(simulation.getResources().keySet());
+
+        Set<Settler> I = maxIndependentSet(N, O);
+        double p = (double)I.size()/(double)N.size();
+        System.out.println("This is a |I|/n-approx : " +
+                "this algorithm will outputs a solution whose value is a least " +
+                p + "-times the optimal value"
+        );
+
+        while(!N.isEmpty()) {
+            N.removeAll(I);
+            //System.out.println("rest (N\\I) : " + N.stream().map(Settler::getName).toList());
+            I = maxIndependentSet(N, O);
+        }
+        int j = simulation.getJealousNumber();
+        int nj = simulation.getSettlers().size()-j;
+        System.out.println("p-approx with p = |I|/n = " + p +
+                " returned j = " + j +
+                " (" + nj + " non-jealous settlers)" +
+                "/Optimal value should be o <= " + (int)((nj)/p) +
+                " cause " + nj + " is a " + p + "-approx value of optimal, meaning result " + nj + " >= " + p + "*optimal"
+        );
+    }
+
+
+    private static Set<Settler> maxIndependentSet(Set<Settler> N, Set<String> O) {
+        Queue<Settler> Q = new ArrayDeque<>(N);
+        Set<Settler> I = new HashSet<>();
+
+        while(!Q.isEmpty()) {
+            Settler settler = Q.poll();
+            I.add(settler);
+            Set<Settler> neighbors = settler.getBadRelations();
+            Q.removeAll(neighbors);
+        }
+
+        System.out.println("update independents (I) : " + I.stream().map(Settler::getName).toList());
         for(Settler independent : I) {
             Resource pi = getBestAffectation(independent, O);
             independent.setAffectation(pi);
+            //System.out.println("Give " + pi + " to " + independent.getName());
             assert pi != null;
             O.remove(pi.getName());
         }
 
-        for(Settler rest : NI) {
-            Resource pi = getBestAffectation(rest, O);
-            rest.setAffectation(pi);
-            assert pi != null;
-            O.remove(pi.getName());
-        }
+        return I;
     }
 
     private static Resource getBestAffectation(Settler s, Set<String> available) {

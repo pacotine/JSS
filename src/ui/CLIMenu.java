@@ -52,7 +52,7 @@ public class CLIMenu {
     }
 
     private void initRandom() {
-        this.simulation = Simulation.random(1000);
+        this.simulation = Simulation.random(50, 50);
     }
 
     private int askN() {
@@ -112,10 +112,10 @@ public class CLIMenu {
         System.out.println("Linear dispatch : ");
         dispatcher.linearDispatch();
         simulation.showJealous();
-        System.out.println("MAX-LEF dispatch : ");
+        System.out.println("\n\nMAX-LEF dispatch : ");
         dispatcher.maxLEFDispatch();
         simulation.showJealous();
-        //simulation.showSettlers();
+        simulation.showSettlers();
     }
 
     private void showSubMenu() {

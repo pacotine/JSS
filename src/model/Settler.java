@@ -35,7 +35,8 @@ public class Settler {
 
     public void setAffectation(Resource affectation) {
         this.affectation = affectation;
-        this.affectationRank = Arrays.asList(preferences).indexOf(affectation);
+        if(affectation == null) this.affectationRank = -1;
+        else this.affectationRank = Arrays.asList(preferences).indexOf(affectation);
     }
 
     public String getName() {
