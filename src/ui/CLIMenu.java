@@ -33,26 +33,26 @@ public class CLIMenu {
     }
 
     private void initDev() {
-        this.simulation = new Simulation(6);
-        String[] r = new String[6];
-        for(int i = 0; i < 6; i++) {
+        this.simulation = new Simulation(5);
+        String[] r = new String[5];
+        for(int i = 0; i < 5; i++) {
             r[i] = "R"+(i+1);
         }
 
-        simulation.setSettlerPreferences("A", r[1], r[2], r[3], r[4], r[5], r[0]);
-        simulation.setSettlerPreferences("B", r[1], r[2], r[3], r[4], r[5], r[0]);
-        simulation.setSettlerPreferences("C", r[1], r[2], r[3], r[4], r[5], r[0]);
-        simulation.setSettlerPreferences("D", r[1], r[2], r[3], r[4], r[5], r[0]);
-        simulation.setSettlerPreferences("E", r[1], r[2], r[3], r[4], r[5], r[0]);
-        simulation.setSettlerPreferences("F", r[1], r[2], r[3], r[4], r[5], r[0]);
+        simulation.setSettlerPreferences("A1", r[1], r[2], r[3], r[4], r[0]);
+        simulation.setSettlerPreferences("B1", r[2], r[1], r[3], r[0], r[4]);
+        simulation.setSettlerPreferences("C1", r[0], r[2], r[4], r[3], r[1]);
+        simulation.setSettlerPreferences("D1", r[3], r[0], r[1], r[4], r[2]);
+        simulation.setSettlerPreferences("E1", r[0], r[4], r[3], r[1], r[2]);
 
-        simulation.setBadRelations("A", "B");
-        simulation.setBadRelations("B", "C");
-        simulation.setBadRelations("E", "C");
+        simulation.setBadRelations("A1", "B1");
+        simulation.setBadRelations("B1", "C1");
+        simulation.setBadRelations("E1", "C1");
+        simulation.setBadRelations("D1", "C1");
     }
 
     private void initRandom() {
-        this.simulation = Simulation.random(50, 50);
+        this.simulation = Simulation.random(15, 3);
     }
 
     private int askN() {
