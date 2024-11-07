@@ -18,8 +18,8 @@ public class CLIMenu {
     public void start() {
         try {
             //init();
-            initRandom();
-            //initDev();
+            //initRandom();
+            initDev();
             showMainMenu();
             showSubMenu();
         } catch(QuitException ie) {
@@ -108,12 +108,19 @@ public class CLIMenu {
         } while(!correct);
 
         System.out.println("/!\\\nEverything seems completed! Now, we're gonna find a solution\n");
+
+        // Begin affectations
         Dispatcher dispatcher = new Dispatcher(simulation);
+
+        // Affect with linear algorithm
         System.out.println("Linear dispatch : ");
         dispatcher.linearDispatch();
         simulation.showJealous();
+
+        // Affect with Max-LEF algorithm
+        simulation.clearAffectations();
         System.out.println("\n\nMAX-LEF dispatch : ");
-        dispatcher.maxLEFDispatch();
+        dispatcher.maxLEFDispatch(20);
         simulation.showJealous();
         simulation.showSettlers();
     }
