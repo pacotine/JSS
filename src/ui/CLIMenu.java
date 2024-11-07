@@ -5,16 +5,27 @@ import env.Simulation;
 
 import java.util.Arrays;
 
+/**
+ * This class manages interaction between the user and the simulation of resource allocation to a colony.
+ * This is an interactive menu which the user can quit at any time by pressing {@code quit}.
+ */
 public class CLIMenu {
     private Simulation simulation;
     private CLIReader reader;
 
+    /**
+     * Constructs a {@link CLIMenu} by initializing a {@link CLIReader}.
+     */
     public CLIMenu() {
         this.reader = new CLIReader();
         System.out.println("Hello, welcome to the JSS program (CLI version) \\o/\n" +
                 "If you want to close this program, enter 'quit'\n");
     }
 
+    /**
+     * Starts the interactive menu by initializing a simulation and asking the user for modifications.
+     * @throws QuitException if the user type, at any moment, the keyword {@code quit}
+     */
     public void start() {
         try {
             //init();
@@ -27,11 +38,17 @@ public class CLIMenu {
         }
     }
 
+    /**
+     * Asks the user the number of settlers in the colony before initializing a classic simulation.
+     */
     private void init() {
         int n = askN();
         if(n != -1) this.simulation = new Simulation(n);
     }
 
+    /**
+     * TEMP.
+     */
     private void initDev() {
         this.simulation = new Simulation(5);
         String[] r = new String[5];
@@ -51,10 +68,19 @@ public class CLIMenu {
         simulation.setBadRelations("D1", "C1");
     }
 
+    /**
+     * Initializes a random simulation with {@link Simulation#random(int, int)}.
+     */
     private void initRandom() {
         this.simulation = Simulation.random(15, 3);
     }
 
+    /**
+     * Uses the {@link CLIReader} to ask the number of settlers for this simulation to the user.
+     * @return the number of settlers for this simulation
+     * @throws InputException if the number entered by the user is less than {@code 1} or greater than {@code 26}
+     * @throws NumberFormatException if the input is not a number
+     */
     private int askN() {
         int n;
         boolean correct = false;
@@ -76,6 +102,9 @@ public class CLIMenu {
         return n;
     }
 
+    /**
+     * Prints the main menu, asking the user its customized simulation parameters.
+     */
     private void showMainMenu() {
         if(simulation == null) {
             System.out.println("The simulation has not been initialized, please complete the following...");
@@ -111,6 +140,9 @@ public class CLIMenu {
         showDispatcherMenu();
     }
 
+    /**
+     * Prints the submenu, prompting the user his choice for the next step (switch, see jealous, go back to the dispatcher menu).
+     */
     private void showSubMenu() {
         System.out.println("Now you can change affectations and see jealous settlers");
         do {
@@ -140,6 +172,9 @@ public class CLIMenu {
 
     }
 
+    /**
+     * Prints the dispatcher menu, asking the user whether algorithm he wants to use (linear, MAX-LEF, ...).
+     */
     private void showDispatcherMenu() {
         boolean correct = true;
         // begin affectations
@@ -171,6 +206,10 @@ public class CLIMenu {
         simulation.showJealous();
     }
 
+    /**
+     * Prompts the user with the {@link CLIReader}, asking for 2 {@link String} representing 2 settlers' name in order to
+     * switch their resources (with {@link Simulation#switchAffectations(String, String)}).
+     */
     private void askSwitch() {
         boolean correct = false;
         do {
@@ -186,6 +225,10 @@ public class CLIMenu {
         } while(!correct);
     }
 
+    /**
+     * Prompts the user with the {@link CLIReader}, asking for 2 {@link String} representing 2 settlers' name in order to
+     * create their relation (with {@link Simulation#setBadRelations(String, String)}).
+     */
     private void askRelations() {
         boolean correct = false;
         do {
@@ -201,6 +244,11 @@ public class CLIMenu {
         } while(!correct);
     }
 
+    /**
+     * Prompts the user with the {@link CLIReader}, asking for a {@link String} representing a settler's name, and {@code n}
+     * {@link String} representing its preferences.
+     * Then, sets to this settler its preferences using {@link Simulation#setSettlerPreferences(String, String...)}
+     */
     private void askPreferences() {
         boolean correct = false;
         do {
