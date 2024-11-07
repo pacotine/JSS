@@ -108,21 +108,7 @@ public class CLIMenu {
         } while(!correct);
 
         System.out.println("/!\\\nEverything seems completed! Now, we're gonna find a solution\n");
-
-        // Begin affectations
-        Dispatcher dispatcher = new Dispatcher(simulation);
-
-        // Affect with linear algorithm
-        System.out.println("Linear dispatch : ");
-        dispatcher.linearDispatch();
-        simulation.showJealous();
-
-        // Affect with Max-LEF algorithm
-        simulation.clearAffectations();
-        System.out.println("\n\nMAX-LEF dispatch : ");
-        dispatcher.maxLEFDispatch(20);
-        simulation.showJealous();
-        simulation.showSettlers();
+        showDispatcherMenu();
     }
 
     private void showSubMenu() {
@@ -130,7 +116,9 @@ public class CLIMenu {
         do {
             System.out.println("\nPlease select an option : " +
                     "\n\t1. switch affectations between 2 settlers" +
-                    "\n\t2. see all jealous settlers");
+                    "\n\t2. see all jealous settlers" +
+                    "\n\t3. choose another algorithm"
+            );
             String res = reader.readInput();
 
             switch(res) {
@@ -141,12 +129,46 @@ public class CLIMenu {
                 case "2":
                     simulation.showJealous();
                     break;
+                case "3":
+                    simulation.clear();
+                    showDispatcherMenu();
                 default:
-                    System.out.println("Invalid input (select 1 or 2)");
+                    System.out.println("Invalid input (select 1, 2 or 3)");
                     break;
             }
         } while(true);
 
+    }
+
+    private void showDispatcherMenu() {
+        boolean correct = true;
+        // begin affectations
+        Dispatcher dispatcher = new Dispatcher(simulation);
+        do {
+            System.out.println("Please select a dispatcher algorithm : " +
+                    "\n\t1. linear" +
+                    "\n\t2. MAX-LEF p-approx"
+            );
+            String res = reader.readInput();
+
+            switch(res) {
+                case "1":
+                    // assign with linear algorithm
+                    System.out.println("Linear dispatch : ");
+                    dispatcher.linearDispatch();
+                    break;
+                case "2":
+                    // assign with MAX-LEF p-approx algorithm
+                    System.out.println("\n\nMAX-LEF dispatch : ");
+                    dispatcher.maxLEFDispatch(simulation.getSettlers().size());
+                    break;
+                default:
+                    correct = false;
+                    break;
+            }
+        }while(!correct);
+        simulation.showSettlers();
+        simulation.showJealous();
     }
 
     private void askSwitch() {

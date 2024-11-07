@@ -44,10 +44,9 @@ public class Simulation {
         for(int i = 1; i <= n; i++) {
             String sn = String.valueOf(ALPHABET[(i-1)%26])+((i-1)/26+1);
             resources.put("R" + i, new Resource("R"+i));
-            System.out.println(i + "/" + sn + "/" + settlers.containsKey(sn));
             settlers.put(sn, new Settler(sn, n));
         }
-        System.out.println(settlers.keySet());
+        System.out.println("Settlers : " + settlers.keySet());
     }
 
     public void showSettlers() {
@@ -147,7 +146,7 @@ public class Simulation {
         return correct;
     }
 
-    public void clearAffectations() {
+    public void clear() {
         for(Settler s : settlers.values()) {
             s.setAffectation(null);
         }
