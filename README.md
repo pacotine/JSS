@@ -36,8 +36,9 @@ This approach involves assigning the most desired resource that is still availab
 In reality, this process is $O(n)$ complex, with a significant drawback in that it fails to reduce the number of envious settlers.
 
 ### _**MAX-LEF**_ Dispatch
-_**MAX-LEF**_ stands for Maximum Local Envy Freeness. It is an algorithm described in [this thesis paper](https://theses.hal.science/tel-03222104v1/document) by Anaëlle Wilczynski [[Section 4.4](https://theses.hal.science/tel-03222104v1/document#section.4.4)].
-The main idea is to choose a specific order to apply a linear dispatch process that minimises local point conflicts. 
+_**MAX-LEF**_ stands for _Maximum Local Envy Freeness_. It is an algorithm described in [this thesis paper](https://theses.hal.science/tel-03222104v1/document) by Anaëlle Wilczynski [[Section 4.4](https://theses.hal.science/tel-03222104v1/document#section.4.4)].
+The main idea is to choose a specific order to apply a linear dispatch process that minimises local point conflicts by determining an independent set of settlers
+in the relationships graph.
 
 This algorithm is known to be NP-complete 
 (as is the _**DEC-LEF**_ algorithm, which determines whether there is a solution without any jealousy),
