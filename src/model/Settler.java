@@ -150,8 +150,8 @@ public class Settler {
     }
 
     /**
-     * Check if one settler is jealous of another (one is enough).
-     * @return {@code true} if the settler is jealous, {@code false} otherwise.
+     * Check if the settler is jealous of another (one is enough).
+     * @return {@code true} if the settler is jealous, {@code false} otherwise
      */
     public boolean isJealous() {
         if(affectation != null) {

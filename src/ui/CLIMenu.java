@@ -28,9 +28,9 @@ public class CLIMenu {
      */
     public void start() {
         try {
-            //init();
+            init();
             //initRandom();
-            initDev();
+            //initDev();
             showMainMenu();
             showSubMenu();
         } catch(QuitException ie) {
@@ -159,11 +159,13 @@ public class CLIMenu {
                     simulation.showSettlers();
                     break;
                 case "2":
+                    simulation.showSettlers();
                     simulation.showJealous();
                     break;
                 case "3":
                     simulation.clear();
                     showDispatcherMenu();
+                    break;
                 default:
                     System.out.println("Invalid input (select 1, 2 or 3)");
                     break;
@@ -213,7 +215,7 @@ public class CLIMenu {
     private void askSwitch() {
         boolean correct = false;
         do {
-            System.out.println("Please enter the 2 settlers to switch resources (in example : A B) :");
+            System.out.println("Please enter the 2 settlers to switch resources (for example : A1 B1) :");
 
             try {
                 String[] args =  reader.readArguments(2);
@@ -232,7 +234,7 @@ public class CLIMenu {
     private void askRelations() {
         boolean correct = false;
         do {
-            System.out.println("Please enter the toxic relation between 2 settlers (in example : A B) :");
+            System.out.println("Please enter the toxic relation between 2 settlers (for example : A1 B1) :");
 
             try {
                 String[] args =  reader.readArguments(2);
@@ -252,7 +254,7 @@ public class CLIMenu {
     private void askPreferences() {
         boolean correct = false;
         do {
-            System.out.println("Please enter the preferences of a settler (in example : A R1 R3 R2) :");
+            System.out.println("Please enter the preferences of a settler (for example : A1 R1 R3 R2) :");
 
             try {
                 String[] args =  reader.readArguments(simulation.getSettlers().size()+1);
