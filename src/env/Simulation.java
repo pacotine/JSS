@@ -16,7 +16,7 @@ import java.util.Collections;
  * settler fights for the best available resource against its enemy in the colony.
  * <br>
  * A simulation is the set of a <a href="https://en.wikipedia.org/wiki/Resource_allocation">resource allocation problem</a>.
- * Given a set of agents N = {1, ..., n} and a set of indivisible resources O = {o1 , . . . , or},
+ * Given a set of agents N = {1, ..., n} and a set of indivisible resources O = {o1, ..., or},
  * the number of resources is equal to the number of agents, i.e., r = n, and each settler
  * i ∈ N should receive exactly one resource o ∈ O.
  * <br>
