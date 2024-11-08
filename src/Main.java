@@ -1,6 +1,9 @@
 import env.Simulation;
 import ui.CLIMenu;
 
+/**
+ * Initializes the program.
+ */
 public class Main {
     public static void main(String[] args) {
         CLIMenu cliMenu = new CLIMenu();
