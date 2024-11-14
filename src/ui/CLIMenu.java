@@ -28,8 +28,8 @@ public class CLIMenu {
      */
     public void start() {
         try {
-            init();
-            //initRandom();
+            //init();
+            initRandom();
             //initDev();
             showMainMenu();
             showSubMenu();
@@ -178,10 +178,11 @@ public class CLIMenu {
      * Prints the dispatcher menu, asking the user whether algorithm he wants to use (linear, MAX-LEF, ...).
      */
     private void showDispatcherMenu() {
-        boolean correct = true;
+        boolean correct;
         // begin affectations
         Dispatcher dispatcher = new Dispatcher(simulation);
         do {
+            correct = true;
             System.out.println("Please select a dispatcher algorithm : " +
                     "\n\t1. linear" +
                     "\n\t2. MAX-LEF p-approx"
