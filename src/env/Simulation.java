@@ -42,6 +42,11 @@ public class Simulation {
         init(n);
     }
 
+    public Simulation(Map<String, Settler> settlers, Map<String, Resource> resources) {
+        this.resources = resources;
+        this.settlers = settlers;
+    }
+
     /**
      * Constructs a new {@link Simulation} with the specified number of settlers {@code n} by random states :
      * each of the {@code n} settlers will have a maximum specified number {@code d} of enemy (<i>bad relations</i>) in the colony,
