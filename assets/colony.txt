@@ -1,0 +1,11 @@
+colon(babar).
+colon(lolo).
+colon(delobelle).
+ressource(saxophone).
+ressource(BMX spatial).
+ressource(trotinette).
+deteste(delobelle,lolo).
+deteste(lolo,babar).
+preferences(nom_colon_1,BMX spatial,trotinette,saxophone).
+preferences(nom_colon_2,trotinette,BMX spatial,saxophone).
+preferences(nom_colon_3,trotinette,saxophone,BMX spatial).

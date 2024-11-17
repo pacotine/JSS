@@ -1,24 +1,28 @@
 import env.Simulation;
+import file_manager.ColonyReader;
 import ui.CLIMenu;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Initializes the program.
  */
 public class Main {
     public static void main(String[] args) {
-        CLIMenu cliMenu = new CLIMenu();
-        cliMenu.start();
+        if(args.length == 0) {
+            CLIMenu cliMenu = new CLIMenu();
+            cliMenu.start();
+        } else if(args.length == 1) {
+            String path = args[0];
+            try(ColonyReader cr = new ColonyReader(new File(path))) {
+                Simulation simulation = cr.initSimulation();
+                //CLIMenu cliMenu = new CLIMenu(simulation);
+            } catch (IOException e) { //auto close
+                System.out.println("Path " + path + " invalid" +
+                        "\nHow to use?" +
+                        "\n`java Main [path/to/colony/file.txt]` with 'file.txt' your colony file");
+            }
+        }
     }
-
-    /**
-     * Simulation simulation = new Simulation(3);
-     *         simulation.setBadRelations("A", "B");
-     *         simulation.setBadRelations("A", "C");
-     *         simulation.setSettlerPreferences("A", "R1", "R2", "R3");
-     *         simulation.setSettlerPreferences("B", "R1", "R2", "R3");
-     *         simulation.setSettlerPreferences("C", "R3", "R1", "R2");
-     *         simulation.affect("A", "R3");
-     *         simulation.affect("B", "R3"); //no
-     *         simulation.showSettlers();
-     */
 }
