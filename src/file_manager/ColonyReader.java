@@ -90,6 +90,7 @@ public class ColonyReader implements AutoCloseable {
         if(met == ColonyFileMethods.RESOURCES) {
             String firstResourceName = arg(line);
             if(firstResourceName != null) resources.put(firstResourceName, new Resource(firstResourceName));
+            else throw new ColonyFileFormatException(ColonyFileMethods.RESOURCES, line, i-1);
             colonySize--;
         }
         else throw new ColonyFileFormatException(ColonyFileMethods.RESOURCES, "Resources should be set up after settlers");
@@ -132,9 +133,10 @@ public class ColonyReader implements AutoCloseable {
 
         if(met == ColonyFileMethods.PREFERENCES) {
             String[] firstPreferences = args(line);
-            if(firstPreferences != null)
+            if(firstPreferences != null && firstPreferences.length == resources.size()+1)
                 simulation.setSettlerPreferences(firstPreferences[0],
                         Arrays.copyOfRange(firstPreferences, 1, firstPreferences.length));
+            else throw new ColonyFileFormatException(ColonyFileMethods.PREFERENCES, line, i-1);
         }
         else throw new ColonyFileFormatException(ColonyFileMethods.PREFERENCES, "Excepted "
                 + ColonyFileMethods.PREFERENCES.getType()
@@ -146,9 +148,9 @@ public class ColonyReader implements AutoCloseable {
             if(met == null) throw new ColonyFileFormatException(ColonyFileMethods.PREFERENCES, line, i);
 
             String[] preferences = args(line);
-            if(preferences != null) simulation.setSettlerPreferences(preferences[0],
+            if(preferences != null && preferences.length == resources.size()+1) simulation.setSettlerPreferences(preferences[0],
                     Arrays.copyOfRange(preferences, 1, preferences.length));
-            else throw new ColonyFileFormatException(ColonyFileMethods.RESOURCES, line, i);
+            else throw new ColonyFileFormatException(ColonyFileMethods.PREFERENCES, line, i);
 
             i++;
         }

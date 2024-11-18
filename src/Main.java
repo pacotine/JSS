@@ -18,10 +18,8 @@ public class Main {
             String path = args[0];
             try(ColonyReader cr = new ColonyReader(new File(path))) {
                 Simulation simulation = cr.initSimulation();
-                simulation.showSettlers();
-                Dispatcher dispatcher = new Dispatcher(simulation);
-                dispatcher.maxLEFDispatch(5);
-                simulation.showSettlers();
+                CLIMenu cliMenu = new CLIMenu(simulation);
+                cliMenu.start();
             } catch (IOException e) { //auto close
                 System.out.println("Path " + path + " invalid" +
                         "\nHow to use?" +

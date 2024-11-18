@@ -22,15 +22,21 @@ public class CLIMenu {
                 "If you want to close this program, enter 'quit'\n");
     }
 
+    public CLIMenu(Simulation simulation) {
+        this.simulation = simulation;
+        this.reader = new CLIReader();
+    }
+
     /**
      * Starts the interactive menu by initializing a simulation and asking the user for modifications.
      * @throws QuitException if the user type, at any moment, the keyword {@code quit}
      */
     public void start() {
         try {
-            //init();
-            initRandom();
-            //initDev();
+            if(simulation == null) {
+                //init();
+                initRandom();
+            }
             showMainMenu();
             showSubMenu();
         } catch(QuitException ie) {
@@ -44,28 +50,6 @@ public class CLIMenu {
     private void init() {
         int n = askN();
         if(n != -1) this.simulation = new Simulation(n);
-    }
-
-    /**
-     * TEMP.
-     */
-    private void initDev() {
-        this.simulation = new Simulation(5);
-        String[] r = new String[5];
-        for(int i = 0; i < 5; i++) {
-            r[i] = "R"+(i+1);
-        }
-
-        simulation.setSettlerPreferences("A1", r[1], r[2], r[3], r[4], r[0]);
-        simulation.setSettlerPreferences("B1", r[2], r[1], r[3], r[0], r[4]);
-        simulation.setSettlerPreferences("C1", r[0], r[2], r[4], r[3], r[1]);
-        simulation.setSettlerPreferences("D1", r[3], r[0], r[1], r[4], r[2]);
-        simulation.setSettlerPreferences("E1", r[0], r[4], r[3], r[1], r[2]);
-
-        simulation.setBadRelations("A1", "B1");
-        simulation.setBadRelations("B1", "C1");
-        simulation.setBadRelations("E1", "C1");
-        simulation.setBadRelations("D1", "C1");
     }
 
     /**
