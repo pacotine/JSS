@@ -1,11 +1,19 @@
 package file_manager;
 
 public class ColonyFileFormatException extends IllegalArgumentException {
-    public ColonyFileFormatException(ColonyReader.ColonyFileMethods type, String line, int n) {
-        super("Invalid format at line " + n + " : '" + line + "' is incorrect for " + type.getType());
+    public ColonyFileFormatException(String message) {
+        super(message);
     }
 
-    public ColonyFileFormatException(ColonyReader.ColonyFileMethods type, String message) {
-        super("Incorrect format for type : " + type.getType() + "\n" + message);
+    static class InvalidArgumentException extends ColonyFileFormatException {
+        public InvalidArgumentException(ColonyReader.ColonyFileMethods type, String line, int n) {
+            super("Invalid argument at line " + n + " : '" + line + "' is incorrect for " + type.getType() + "()");
+        }
+    }
+
+    static class InvalidMethodException extends ColonyFileFormatException {
+        public InvalidMethodException(String line, int n) {
+            super("Unknown method " + line + " at line " + n);
+        }
     }
 }

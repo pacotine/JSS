@@ -1,11 +1,15 @@
-colon(babar).
-colon(lolo).
-colon(delobelle).
-ressource(saxophone).
-ressource(BMX spatial).
-ressource(trotinette).
-deteste(delobelle,lolo).
-deteste(lolo,babar).
-preferences(delobelle,BMX spatial,trotinette,saxophone).
-preferences(lolo,trotinette,BMX spatial,saxophone).
-preferences(babar,trotinette,saxophone,BMX spatial).
+colon(Dark Vador).
+colon(Dartagnan).
+colon(Zoooooo).
+colon(Tartatin).
+ressource(Pomme).
+ressource(Big Mac).
+ressource(Tarte au citron).
+ressource(Orange).
+deteste(Dark Vador,Dartagnan).
+deteste(Dark Vador,Zoooooo).
+deteste(Dark Vador,Tartatin).
+preferences(Dark Vador,Big Mac,Tarte au citron,Orange,Pomme).
+preferences(Dartagnan,Big Mac,Orange,Tarte au citron,Pomme).
+preferences(Tartatin,Pomme,Tarte au citron,Big Mac,Orange).
+preferences(Zoooooo,Pomme,Big Mac,Orange,Tarte au citron).
