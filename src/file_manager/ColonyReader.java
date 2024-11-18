@@ -7,10 +7,16 @@ import model.Settler;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ColonyReader implements AutoCloseable {
     private Simulation simulation;
     private final Scanner scanner;
+
+    private static final Pattern ARG_REGEX = Pattern.compile("[a-z]+\\([\\w ]+\\)");
+    private static final Pattern ARGS_REGEX = Pattern.compile("[a-z]+\\(([\\w ]+,[\\w ]+)+\\)");
+    private static final Pattern MET_REGEX = Pattern.compile("[a-z]+\\(.+\\)");
 
     public enum ColonyFileMethods {
         SETTLERS("colon"),
@@ -130,7 +136,11 @@ public class ColonyReader implements AutoCloseable {
                 simulation.setSettlerPreferences(firstPreferences[0],
                         Arrays.copyOfRange(firstPreferences, 1, firstPreferences.length));
         }
-        else throw new ColonyFileFormatException(ColonyFileMethods.PREFERENCES, "Preferences should be set up at the end");
+        else throw new ColonyFileFormatException(ColonyFileMethods.PREFERENCES, "Excepted "
+                + ColonyFileMethods.PREFERENCES.getType()
+                + " or " + ColonyFileMethods.BAD_RELATIONS.getType()
+                + "/found " + met.getType()
+        );
         while((line = readLine()) != null && met == ColonyFileMethods.PREFERENCES) {
             met = method(line);
             if(met == null) throw new ColonyFileFormatException(ColonyFileMethods.PREFERENCES, line, i);
@@ -147,18 +157,23 @@ public class ColonyReader implements AutoCloseable {
     }
 
     private ColonyFileMethods method(String line) {
-        if(line.matches("[a-z]+\\(.+\\)")) return ColonyFileMethods.valueOfType(line.split("\\(")[0]);
+        if(matches(MET_REGEX, line)) return ColonyFileMethods.valueOfType(line.split("\\(")[0]);
         return null;
     }
 
     private String arg(String line) {
-        if(line.matches("[a-z]+\\([\\w ]+\\)")) return line.split("\\(")[1].replace(")", "");
+        if(matches(ARG_REGEX, line)) return line.split("\\(")[1].replace(")", "");
         return null;
     }
 
     private String[] args(String line) {
-        if(line.matches("[a-z]+\\(([\\w ]+,[\\w ]+)+\\)")) return line.split("[()]")[1].split(",");
+        if(matches(ARGS_REGEX, line)) return line.split("[()]")[1].split(",");
         return null;
+    }
+
+    private static boolean matches(Pattern pattern, String line) {
+        Matcher m = pattern.matcher(line);
+        return m.matches();
     }
 
     public Simulation initSimulation() {
