@@ -43,21 +43,17 @@ public class ColonyReader implements AutoCloseable {
         this.scanner = new Scanner(file);
         scanner.useDelimiter("\\.");
 
-        readFile();
+        retrieveData();
     }
 
-    private String readLine() throws IOException {
+    private String readLine() {
         if(scanner.hasNext()) {
             return scanner.next().trim();
         }
         return null; //EOF
     }
 
-    private void readFile() throws IOException {
-        retrieveData();
-    }
-
-    private void retrieveData() throws IOException, ColonyFileFormatException {
+    private void retrieveData() throws ColonyFileFormatException {
         List<String> settlersNames = new ArrayList<>();
         Map<String, Settler> settlers = new HashMap<>();
         Map<String, Resource> resources = new HashMap<>();
@@ -79,7 +75,7 @@ public class ColonyReader implements AutoCloseable {
             i++;
         }
 
-        if(settlersNames.isEmpty()) throw new ColonyFileFormatException("No settler defined");
+        if(settlersNames.isEmpty()) throw new ColonyFileFormatException("Settlers should be defined first");
         int colonySize = settlersNames.size();
 
         for(String name : settlersNames) {
@@ -153,8 +149,6 @@ public class ColonyReader implements AutoCloseable {
 
             i++;
         }
-
-
     }
 
     private ColonyFileMethods method(String line) {
