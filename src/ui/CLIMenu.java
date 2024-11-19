@@ -1,7 +1,7 @@
 package ui;
 
+import env.Dispatcher;
 import env.Simulation;
-import file_manager.AffectationsWriter;
 
 /**
  * This class manages interaction between the user and the simulation of resource allocation to a colony.
@@ -26,6 +26,41 @@ public abstract class CLIMenu {
             System.exit(0);
         });
         while(reader.isOpen()) display();
+    }
+
+    /**
+     * Prints the dispatcher menu, asking the user whether algorithm he wants to use (linear, MAX-LEF, ...).
+     */
+    protected void showDispatcherMenu() {
+        boolean correct;
+        // begin affectations
+        Dispatcher dispatcher = new Dispatcher(simulation);
+        do {
+            correct = true;
+            System.out.println("Please select a dispatcher algorithm : " +
+                    "\n\t1. linear" +
+                    "\n\t2. MAX-LEF p-approx"
+            );
+            String res = reader.readInput();
+
+            switch(res) {
+                case "1":
+                    // assign with linear algorithm
+                    System.out.println("Linear dispatch : ");
+                    dispatcher.linearDispatch();
+                    break;
+                case "2":
+                    // assign with MAX-LEF p-approx algorithm
+                    System.out.println("\n\nMAX-LEF dispatch : ");
+                    dispatcher.maxLEFDispatch(simulation.getSettlers().size());
+                    break;
+                default:
+                    correct = false;
+                    break;
+            }
+        }while(!correct);
+        simulation.showSettlers();
+        simulation.showJealous();
     }
 
     protected abstract void display();

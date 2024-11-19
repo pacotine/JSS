@@ -119,41 +119,6 @@ public class MainMenu extends CLIMenu {
     }
 
     /**
-     * Prints the dispatcher menu, asking the user whether algorithm he wants to use (linear, MAX-LEF, ...).
-     */
-    private void showDispatcherMenu() {
-        boolean correct;
-        // begin affectations
-        Dispatcher dispatcher = new Dispatcher(simulation);
-        do {
-            correct = true;
-            System.out.println("Please select a dispatcher algorithm : " +
-                    "\n\t1. linear" +
-                    "\n\t2. MAX-LEF p-approx"
-            );
-            String res = reader.readInput();
-
-            switch(res) {
-                case "1":
-                    // assign with linear algorithm
-                    System.out.println("Linear dispatch : ");
-                    dispatcher.linearDispatch();
-                    break;
-                case "2":
-                    // assign with MAX-LEF p-approx algorithm
-                    System.out.println("\n\nMAX-LEF dispatch : ");
-                    dispatcher.maxLEFDispatch(simulation.getSettlers().size());
-                    break;
-                default:
-                    correct = false;
-                    break;
-            }
-        }while(!correct);
-        simulation.showSettlers();
-        simulation.showJealous();
-    }
-
-    /**
      * Prompts the user with the {@link CLIReader}, asking for 2 {@link String} representing 2 settlers' name in order to
      * switch their resources (with {@link Simulation#switchAffectations(String, String)}).
      */
