@@ -2,7 +2,9 @@ package ui;
 
 import env.Dispatcher;
 import env.Simulation;
+import file_manager.AffectationsWriter;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -10,8 +12,67 @@ import java.util.Arrays;
  * This is an interactive menu which the user can quit at any time by pressing {@code quit}.
  */
 public class CLIMenu {
-    private Simulation simulation;
-    private CLIReader reader;
+    protected Simulation simulation;
+    protected CLIReader reader;
+
+    public static class File extends CLIMenu {
+        private final String srcPath;
+
+        public File(Simulation simulation, String srcPath) {
+            super(simulation);
+            this.simulation = simulation;
+            this.srcPath = srcPath;
+        }
+
+        private void showSaveMenu() {
+            boolean correct;
+            do {
+                correct = true;
+                System.out.println("File name?");
+                String destPath = reader.readInput();
+                try {
+                    AffectationsWriter affectationsWriter = new AffectationsWriter(simulation, destPath);
+                    if(srcPath.equals(destPath)) throw new IllegalArgumentException("File already exists, choose another file name");
+                    affectationsWriter.saveSimulation();
+                } catch(IllegalArgumentException | IOException il) {
+                    System.out.println(il.getMessage());
+                    correct = false;
+                }
+            }while(!correct);
+        }
+
+        private void showFileMenu() {
+            boolean correct;
+            do {
+                correct = true;
+                System.out.println("Please select an option : " +
+                        "\n\t1. resolution" +
+                        "\n\t2. save yours affectations"
+                );
+                String res = reader.readInput();
+
+                switch(res) {
+                    case "1":
+                        showDispatcherMenu();
+                        showFileMenu();
+                        break;
+                    case "2":
+                        showSaveMenu();
+                        showFileMenu();
+                        break;
+                    default:
+                        System.out.println("Incorrect input : " + res);
+                        correct = false;
+                        break;
+                }
+            }while(!correct);
+        }
+
+        @Override
+        protected void init() {
+            showFileMenu();
+        }
+    }
 
     /**
      * Constructs a {@link CLIMenu} by initializing a {@link CLIReader}.
@@ -33,21 +94,23 @@ public class CLIMenu {
      */
     public void start() {
         try {
-            if(simulation == null) {
-                //init();
-                initRandom();
-            }
-            showMainMenu();
-            showSubMenu();
+            init();
         } catch(QuitException ie) {
             System.out.println(ie.getMessage());
         }
     }
 
+    protected void init() {
+        initAsk();
+        //initRandom();
+        showMainMenu();
+        showSubMenu();
+    }
+
     /**
      * Asks the user the number of settlers in the colony before initializing a classic simulation.
      */
-    private void init() {
+    private void initAsk() {
         int n = askN();
         if(n != -1) this.simulation = new Simulation(n);
     }
@@ -92,7 +155,7 @@ public class CLIMenu {
     private void showMainMenu() {
         if(simulation == null) {
             System.out.println("The simulation has not been initialized, please complete the following...");
-            init();
+            initAsk();
         }
 
         boolean correct = false;
@@ -161,7 +224,7 @@ public class CLIMenu {
     /**
      * Prints the dispatcher menu, asking the user whether algorithm he wants to use (linear, MAX-LEF, ...).
      */
-    private void showDispatcherMenu() {
+    protected void showDispatcherMenu() {
         boolean correct;
         // begin affectations
         Dispatcher dispatcher = new Dispatcher(simulation);

@@ -18,7 +18,7 @@ public class Main {
             String path = args[0];
             try(ColonyReader cr = new ColonyReader(new File(path))) {
                 Simulation simulation = cr.initSimulation();
-                CLIMenu cliMenu = new CLIMenu(simulation);
+                CLIMenu cliMenu = new CLIMenu.File(simulation, path);
                 cliMenu.start();
             } catch (IOException e) { //auto close
                 System.out.println("Path " + path + " invalid" +

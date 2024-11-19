@@ -29,7 +29,7 @@ public class CLIReader {
         do res = scanner.nextLine();
         while (res.isEmpty());
         if(res.equals("quit")) throw new QuitException(scanner);
-        return res;
+        return res.trim();
     }
 
     /**
