@@ -1,7 +1,5 @@
 package ui;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,26 +7,33 @@ import java.util.regex.Pattern;
 /**
  * This class is a utility class for standard input using a {@link Scanner}.
  */
-public class CLIReader {
+public class CLIReader implements Closeable {
     private final Scanner scanner;
+    private boolean isOpen;
+    private OnReaderClosedListener onReaderClosedListener;
 
     /**
      * Constructs a new {@link CLIReader} by initializing a new {@link Scanner} for the standard input stream.
      */
     public CLIReader() {
         this.scanner = new Scanner(System.in);
+        this.isOpen = true;
+    }
+
+    public void setOnReaderClosedListener(OnReaderClosedListener onReaderClosedListener) {
+        this.onReaderClosedListener = onReaderClosedListener;
     }
 
     /**
      * Reads the next line.
      * @return the next line as a {@link String}
-     * @throws QuitException if the user type, at any moment, the keyword {@code quit}
      */
-    public String readInput() throws QuitException {
+    public String readInput() {
         String res;
         do res = scanner.nextLine();
         while (res.isEmpty());
-        if(res.equals("quit")) throw new QuitException(scanner);
+        if(res.equalsIgnoreCase("quit")) close();
+
         return res;
     }
 
@@ -70,5 +75,16 @@ public class CLIReader {
         );
 
         return args.toArray(new String[0]);
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    @Override
+    public void close() {
+        this.scanner.close();
+        this.isOpen = false;
+        if(onReaderClosedListener != null) this.onReaderClosedListener.onReaderClosed();
     }
 }

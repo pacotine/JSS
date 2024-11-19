@@ -2,6 +2,7 @@ import env.Dispatcher;
 import env.Simulation;
 import file_manager.ColonyReader;
 import ui.CLIMenu;
+import ui.MainMenu;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +13,8 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         if(args.length == 0) {
-            CLIMenu cliMenu = new CLIMenu();
-            cliMenu.start();
+            MainMenu mainMenu = new MainMenu();
+            mainMenu.start();
         } else if(args.length == 1) {
             String path = args[0];
             try(ColonyReader cr = new ColonyReader(new File(path))) {
