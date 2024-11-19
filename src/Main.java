@@ -1,8 +1,8 @@
 import env.Dispatcher;
 import env.Simulation;
 import file_manager.ColonyReader;
-import ui.CLIMenu;
 import ui.MainMenu;
+import ui.FileMenu;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +19,8 @@ public class Main {
             String path = args[0];
             try(ColonyReader cr = new ColonyReader(new File(path))) {
                 Simulation simulation = cr.initSimulation();
-                CLIMenu cliMenu = new CLIMenu(simulation);
-                cliMenu.start();
+                FileMenu fileMenu = new FileMenu(simulation);
+                fileMenu.start();
             } catch (IOException e) { //auto close
                 System.out.println("Path " + path + " invalid" +
                         "\nHow to use?" +
