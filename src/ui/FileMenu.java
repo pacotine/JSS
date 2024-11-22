@@ -11,6 +11,7 @@ public class FileMenu extends CLIMenu {
     public FileMenu(Simulation simulation, String srcPath) {
         this.simulation = simulation;
         this.srcPath = srcPath;
+        simulation.showSettlers();
     }
 
     @Override

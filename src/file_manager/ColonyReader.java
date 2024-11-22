@@ -7,12 +7,15 @@ import model.Settler;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ColonyReader implements AutoCloseable {
     private Simulation simulation;
     private final Scanner scanner;
+    private String lastLine;
+    private int lineIndex;
 
     private static final Pattern ARG_REGEX = Pattern.compile("[a-z]+\\([\\w ]+\\)");
     private static final Pattern ARGS_REGEX = Pattern.compile("[a-z]+\\(([\\w ]+,[\\w ]+)+\\)");
@@ -24,7 +27,7 @@ public class ColonyReader implements AutoCloseable {
         PREFERENCES("preferences"),
         BAD_RELATIONS("deteste");
 
-        private String type;
+        private final String type;
         ColonyFileMethods(String type) {
             this.type = type;
         }
@@ -37,131 +40,124 @@ public class ColonyReader implements AutoCloseable {
             for(ColonyFileMethods m : values()) if(m.getType().equals(type)) return m;
             return null;
         }
+
+        public static boolean next(ColonyFileMethods currentMethod, ColonyFileMethods method) {
+            return switch(method) {
+                case SETTLERS -> currentMethod == RESOURCES;
+                case RESOURCES -> currentMethod == BAD_RELATIONS || currentMethod == PREFERENCES;  //BAD_RELATIONS is optional
+                case BAD_RELATIONS -> currentMethod == PREFERENCES;
+                case PREFERENCES -> false;
+            };
+        }
     }
 
     public ColonyReader(File file) throws IOException {
         this.scanner = new Scanner(file);
+        this.lineIndex = 0;
         scanner.useDelimiter("\\.");
 
         retrieveData();
     }
 
     private String readLine() {
-        if(scanner.hasNext()) {
-            return scanner.next().trim();
+        if (lastLine != null) {
+            String line = lastLine;
+            lastLine = null;
+            return line;
         }
-        return null; //EOF
+        lineIndex++;
+        return scanner.hasNext() ? scanner.next().trim() : null; //null = EOF
+    }
+
+    private void pushBack(String line) {
+        this.lastLine = line;
     }
 
     private void retrieveData() throws ColonyFileFormatException {
-        List<String> settlersNames = new ArrayList<>();
+        Set<String> settlersNames = new HashSet<>();
         Map<String, Settler> settlers = new HashMap<>();
         Map<String, Resource> resources = new HashMap<>();
-        int i = 1;
 
-        String line = "";
-        ColonyFileMethods met = null;
+        //checking SETTLERS section first
+        readSection(ColonyFileMethods.SETTLERS, line -> {
+            String name = arg(line);
+            if (name != null) settlersNames.add(name);
+            else throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.SETTLERS, line, lineIndex);
+        });
 
-        boolean hasSettler = true;
-        while(hasSettler && (line = readLine()) != null) {
-            met = method(line);
-            if(met == null) throw new ColonyFileFormatException.InvalidMethodException(line, i);
-            if(met != ColonyFileMethods.SETTLERS) hasSettler = false;
-            else {
-                String name = arg(line);
-                if(name != null) settlersNames.add(name);
-                else throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.SETTLERS, line, i);
-            }
-            i++;
+        //this section should not be empty, at least one settler has to be set
+        if (settlersNames.isEmpty()) {
+            throw new ColonyFileFormatException("Settlers should be defined first");
+        }
+        settlersNames.forEach(name -> settlers.put(name, new Settler(name, settlersNames.size()))); //put settlers into the map
+
+        //then checking RESOURCES section
+        readSection(ColonyFileMethods.RESOURCES, line -> {
+            String resourceName = arg(line);
+            if (resourceName != null) resources.put(resourceName, new Resource(resourceName));
+            else throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.RESOURCES, line, lineIndex);
+        });
+
+        //number of lines in the file should be the same
+        if (resources.size() != settlersNames.size()) {
+            throw new ColonyFileFormatException("Number of resources must equal number of settlers, " +
+                    "but there are " + settlersNames.size() + " distinct names for " + resources.size() + " distinct resources");
         }
 
-        if(settlersNames.isEmpty()) throw new ColonyFileFormatException("Settlers should be defined first");
-        int colonySize = settlersNames.size();
+        this.simulation = new Simulation(settlers, resources); //create simulation
 
-        for(String name : settlersNames) {
-            Settler settler = new Settler(name, colonySize);
-            settlers.put(name, settler);
-        }
+        //checking optional BAD_RELATIONS section
+        readSection(ColonyFileMethods.BAD_RELATIONS, line -> {
+            String[] badRelation = args(line);
+            if (badRelation != null && badRelation.length == 2) {
+                simulation.setBadRelations(badRelation[0], badRelation[1]);
+            } else throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.BAD_RELATIONS, line, lineIndex);
 
-        if(met == ColonyFileMethods.RESOURCES) {
-            String firstResourceName = arg(line);
-            if(firstResourceName != null) resources.put(firstResourceName, new Resource(firstResourceName));
-            else throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.RESOURCES, line, i-1);
-            colonySize--;
-        }
-        else throw new ColonyFileFormatException("Resources should be set up after settlers");
+        });
 
-        while(colonySize > 0 && (line = readLine()) != null && met == ColonyFileMethods.RESOURCES) {
-            met = method(line);
-            if(met == null) throw new ColonyFileFormatException.InvalidMethodException(line, i);
-
-            String rName = arg(line);
-            if(rName != null) {
-                Resource resource = new Resource(rName);
-                resources.put(rName, resource);
-                colonySize--;
-            } else throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.RESOURCES, line, i);
-
-            i++;
-        }
-        System.out.println(colonySize);
-        if(colonySize != 0) throw new ColonyFileFormatException("Invalid number of resources, should be = to settlers number");
-        this.simulation = new Simulation(settlers, resources);
-        System.out.println("SIMULATION WITH " + settlers.keySet() + "/" + resources.keySet());
-
-        boolean hasBadRelations = true;
-        while(hasBadRelations && (line = readLine()) != null) {
-            met = method(line);
-            if(met == null) throw new ColonyFileFormatException.InvalidMethodException(line, i);
-            if(met != ColonyFileMethods.BAD_RELATIONS) hasBadRelations = false;
-            else {
-                String[] badNames = args(line);
-                if (badNames != null && badNames.length == 2) {
-                    String b1 = badNames[0];
-                    String b2 = badNames[1];
-                    simulation.setBadRelations(b1, b2);
-                } else throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.BAD_RELATIONS, line, i);
-            }
-
-            i++;
-        }
-
-        if(met == ColonyFileMethods.PREFERENCES) {
-            String[] firstPreferences = args(line);
-            if(firstPreferences != null && firstPreferences.length == resources.size()+1)
-                simulation.setSettlerPreferences(firstPreferences[0],
-                        Arrays.copyOfRange(firstPreferences, 1, firstPreferences.length));
-            else throw new ColonyFileFormatException.InvalidMethodException(line, i-1);
-        }
-        else throw new ColonyFileFormatException("Excepted "
-                + ColonyFileMethods.PREFERENCES.getType()
-                + " or " + ColonyFileMethods.BAD_RELATIONS.getType()
-                + "/found " + met.getType()
-        );
-        while((line = readLine()) != null && met == ColonyFileMethods.PREFERENCES) {
-            met = method(line);
-            if(met == null) throw new ColonyFileFormatException.InvalidMethodException(line, i);
-
+        //checking the last section
+        readSection(ColonyFileMethods.PREFERENCES, line -> {
             String[] preferences = args(line);
-            if(preferences != null && preferences.length == resources.size()+1) simulation.setSettlerPreferences(preferences[0],
-                    Arrays.copyOfRange(preferences, 1, preferences.length));
-            else throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.PREFERENCES, line, i);
+            if(preferences == null) throw new ColonyFileFormatException.InvalidArgumentException(ColonyFileMethods.PREFERENCES, line, lineIndex);
+            int size = resources.size()+1, args = preferences.length;
+            if(args != size) throw new ColonyFileFormatException(args > size ?
+                    "Extra " + (args-size) + " argument(s) for " + line
+                    : "Missing " + (size-args) + " argument(s) for " + line, lineIndex);
 
-            i++;
+            simulation.setSettlerPreferences(preferences[0], Arrays.copyOfRange(preferences, 1, preferences.length));
+        });
+    }
+
+    private void readSection(ColonyFileMethods method, Consumer<String> processLine) throws ColonyFileFormatException {
+        String line;
+        while((line = readLine()) != null) { //while EOF
+            //System.out.println("handle line : " + line + " for method " + method);
+            ColonyFileMethods currentMethod = method(line);
+            //System.out.println(currentMethod + "/" + method + "/" + ColonyFileMethods.next(currentMethod, method));
+
+            //example : blabla(hello) -> blabla doesn't exist
+            if(currentMethod == null) throw new ColonyFileFormatException.InvalidMethodException(line, lineIndex);
+            //example : we are checking settlers section, but we found a resource method -> this is the end of the settlers section, we should push back this line and handle it in the resource section
+            if(ColonyFileMethods.next(currentMethod, method)) { pushBack(line); return; }
+            //example : we are in the settlers section, the only method accepted here are 'settlers' or 'resource', if we found i.e. the method for bad relations, this is the wrong place!
+            if(currentMethod != method) throw new ColonyFileFormatException(line + " : this method should not be there!", lineIndex);
+
+            //System.out.println(line + " is correct for " + method);
+            processLine.accept(line); //example : we are in the settlers section, the method found in this line is 'settler', it's perfect, we can handle it now
         }
     }
 
-    private ColonyFileMethods method(String line) {
+    private static ColonyFileMethods method(String line) {
         if(matches(MET_REGEX, line)) return ColonyFileMethods.valueOfType(line.split("\\(")[0]);
         return null;
     }
 
-    private String arg(String line) {
+    private static String arg(String line) {
         if(matches(ARG_REGEX, line)) return line.split("\\(")[1].replace(")", "");
         return null;
     }
 
-    private String[] args(String line) {
+    private static String[] args(String line) {
         if(matches(ARGS_REGEX, line)) return line.split("[()]")[1].split(",");
         return null;
     }
@@ -171,7 +167,8 @@ public class ColonyReader implements AutoCloseable {
         return m.matches();
     }
 
-    public Simulation initSimulation() {
+    public Simulation initSimulation() throws ColonyFileFormatException {
+        if(!simulation.checkIfStable()) throw new ColonyFileFormatException("Simulation is not stable");
         return simulation;
     }
 
