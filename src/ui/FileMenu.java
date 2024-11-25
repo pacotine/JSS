@@ -10,7 +10,7 @@ import java.io.IOException;
  * defined by a file with precise syntax (see {@link file_manager.ColonyReader}).
  */
 public class FileMenu extends CLIMenu {
-    private String srcPath;
+    private final String srcPath;
 
     /**
      * Constructs a new {@link FileMenu} with the specified simulation and source path to colony file.

@@ -11,8 +11,8 @@ import java.io.IOException;
  * A utility class for writing the simulation's affectations to a file.
  */
 public class AffectationsWriter {
-    private Simulation simulation;
-    private File file;
+    private final Simulation simulation;
+    private final File file;
 
     /**
      * Constructs an {@link AffectationsWriter} with the specified simulation and output file path.
