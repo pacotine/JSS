@@ -24,8 +24,4 @@ public class AffectationsWriter {
 
         fileWriter.close();
     }
-
-    public boolean isCorrect() {
-        return !file.exists();
-    }
 }
