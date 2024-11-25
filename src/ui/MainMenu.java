@@ -4,10 +4,17 @@ import simulation.Simulation;
 
 import java.util.Arrays;
 
+/**
+ * This class manages interaction between the user and the simulation of resource allocation to a colony, manually defined.
+ */
 public class MainMenu extends CLIMenu {
 
     public MainMenu() {}
 
+    /**
+     * Displays the main menu.
+     * @see CLIMenu#display()
+     */
     @Override
     protected void display() {
         if(simulation == null) {

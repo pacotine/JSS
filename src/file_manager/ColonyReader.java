@@ -16,6 +16,11 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A utility class for reading and parsing colony data files, initializing
+ * a simulation with settlers, resources, relationships, and preferences.
+ * Implements {@link AutoCloseable} to manage file resources.
+ */
 public class ColonyReader implements AutoCloseable {
     private Simulation simulation;
     private final Scanner scanner;
@@ -26,10 +31,25 @@ public class ColonyReader implements AutoCloseable {
     private static final Pattern ARGS_REGEX = Pattern.compile("[a-z]+\\(([\\w ]+,[\\w ]+)+\\)");
     private static final Pattern MET_REGEX = Pattern.compile("[a-z]+\\(.+\\)");
 
+    /**
+     * Enum representing the various sections or methods expected in the colony file.
+     */
     public enum ColonyFileMethods {
+        /**
+         * Represents the settlers section.
+         */
         SETTLERS("colon"),
+        /**
+         * Represents the resources section.
+         */
         RESOURCES("ressource"),
+        /**
+         * Represents the preferences section.
+         */
         PREFERENCES("preferences"),
+        /**
+         * Represents the bad relations section.
+         */
         BAD_RELATIONS("deteste");
 
         private final String type;
@@ -37,15 +57,33 @@ public class ColonyReader implements AutoCloseable {
             this.type = type;
         }
 
+        /**
+         * Returns the string identifier for the method.
+         *
+         * @return the string identifier.
+         */
         public String getType() {
             return type;
         }
 
+        /**
+         * Finds the corresponding {@link ColonyFileMethods} for a given type string.
+         *
+         * @param type the type string
+         * @return the matching {@code ColonyFileMethods}, or {@code null} if none match
+         */
         public static ColonyFileMethods valueOfType(String type) {
             for(ColonyFileMethods m : values()) if(m.getType().equals(type)) return m;
             return null;
         }
 
+        /**
+         * Determines whether a section can validly follow another section.
+         *
+         * @param currentMethod the current section
+         * @param method        the next section
+         * @return {@code true} if the next section is valid, {@code false} otherwise
+         */
         public static boolean next(ColonyFileMethods currentMethod, ColonyFileMethods method) {
             return switch(method) {
                 case SETTLERS -> currentMethod == RESOURCES;
@@ -56,6 +94,12 @@ public class ColonyReader implements AutoCloseable {
         }
     }
 
+    /**
+     * Constructs a {@link ColonyReader} for the given file and starts parsing it.
+     *
+     * @param file the input file to read
+     * @throws IOException if the file cannot be read
+     */
     public ColonyReader(File file) throws IOException {
         this.scanner = new Scanner(file);
         this.lineIndex = 0;
@@ -64,6 +108,11 @@ public class ColonyReader implements AutoCloseable {
         retrieveData();
     }
 
+    /**
+     * Reads the next line from the file, or returns {@code null} if end of file is reached.
+     *
+     * @return the next trimmed line or {@code null}
+     */
     private String readLine() {
         if (lastLine != null) {
             String line = lastLine;
@@ -71,13 +120,23 @@ public class ColonyReader implements AutoCloseable {
             return line;
         }
         lineIndex++;
-        return scanner.hasNext() ? scanner.next().trim() : null; //null = EOF
+        return scanner.hasNext() ? scanner.next().trim() : null;
     }
 
+    /**
+     * Pushes back a line to be reprocessed on the next read.
+     *
+     * @param line the line to push back
+     */
     private void pushBack(String line) {
         this.lastLine = line;
     }
 
+    /**
+     * Parses the colony file to retrieve simulation data, ensuring validity of all sections.
+     *
+     * @throws ColonyFileFormatException if the file format is invalid
+     */
     private void retrieveData() throws ColonyFileFormatException {
         Set<String> settlersNames = new HashSet<>();
         Map<String, Settler> settlers = new HashMap<>();
@@ -133,50 +192,87 @@ public class ColonyReader implements AutoCloseable {
         });
     }
 
+    /**
+     * Reads and processes a specific section of the file.
+     *
+     * @param method      the expected section method
+     * @param processLine a consumer function to handle each line in the section
+     * @throws ColonyFileFormatException if the section is invalid or improperly formatted
+     */
     private void readSection(ColonyFileMethods method, Consumer<String> processLine) throws ColonyFileFormatException {
         String line;
-        while((line = readLine()) != null) { //while EOF
-            //System.out.println("handle line : " + line + " for method " + method);
+        while((line = readLine()) != null) {
             ColonyFileMethods currentMethod = method(line);
-            //System.out.println(currentMethod + "/" + method + "/" + ColonyFileMethods.next(currentMethod, method));
-
             //example : blabla(hello) -> blabla doesn't exist
             if(currentMethod == null) throw new ColonyFileFormatException.InvalidMethodException(line, lineIndex);
             //example : we are checking settlers section, but we found a resource method -> this is the end of the settlers section, we should push back this line and handle it in the resource section
             if(ColonyFileMethods.next(currentMethod, method)) { pushBack(line); return; }
             //example : we are in the settlers section, the only method accepted here are 'settlers' or 'resource', if we found i.e. the method for bad relations, this is the wrong place!
             if(currentMethod != method) throw new ColonyFileFormatException(line + " : this method should not be there!", lineIndex);
-
-            //System.out.println(line + " is correct for " + method);
-            processLine.accept(line); //example : we are in the settlers section, the method found in this line is 'settler', it's perfect, we can handle it now
+            //example : we are in the settlers section, the method found in this line is 'settler', it's perfect, we can handle it now
+            processLine.accept(line);
         }
     }
 
+    /**
+     * Determines the method type of given line.
+     *
+     * @param line the line to analyze
+     * @return the detected {@link ColonyFileMethods}, or {@code null} if none match
+     */
     private static ColonyFileMethods method(String line) {
         if(matches(MET_REGEX, line)) return ColonyFileMethods.valueOfType(line.split("\\(")[0]);
         return null;
     }
 
+    /**
+     * Extracts a single argument from a line.
+     *
+     * @param line the line to analyze
+     * @return the argument string, or {@code null} if the line format is invalid
+     */
     private static String arg(String line) {
         if(matches(ARG_REGEX, line)) return line.split("\\(")[1].replace(")", "");
         return null;
     }
 
+    /**
+     * Extracts multiple arguments from a line.
+     *
+     * @param line the line to analyze
+     * @return an array of arguments, or {@code null} if the line format is invalid
+     */
     private static String[] args(String line) {
         if(matches(ARGS_REGEX, line)) return line.split("[()]")[1].split(",");
         return null;
     }
 
+    /**
+     * Checks whether a line matches a specific pattern.
+     *
+     * @param pattern the pattern to check against
+     * @param line    the line to test
+     * @return {@code true} if the line matches the pattern, {@code false} otherwise
+     */
     private static boolean matches(Pattern pattern, String line) {
         Matcher m = pattern.matcher(line);
         return m.matches();
     }
 
+    /**
+     * Initializes the simulation with parsed data and validates its stability.
+     *
+     * @return the initialized {@link Simulation}
+     * @throws ColonyFileFormatException if the simulation is unstable or invalid
+     */
     public Simulation initSimulation() throws ColonyFileFormatException {
         if(!simulation.checkIfStable()) throw new ColonyFileFormatException("Simulation is not stable");
         return simulation;
     }
 
+    /**
+     * Closes the scanner to release file resources.
+     */
     @Override
     public void close() {
         scanner.close();

@@ -4,8 +4,7 @@ import simulation.Dispatcher;
 import simulation.Simulation;
 
 /**
- * This class manages interaction between the user and the simulation of resource allocation to a colony.
- * This is an interactive menu which the user can quit at any time by pressing {@code quit}.
+ * This class represents an interactive menu which the user can quit at any time by pressing {@code quit}.
  */
 public abstract class CLIMenu {
     protected final CLIReader reader;
@@ -18,6 +17,9 @@ public abstract class CLIMenu {
         this.reader = new CLIReader();
     }
 
+    /**
+     * Sets {@link OnReaderClosedListener} for the reader and starts displaying menu.
+     */
     public void start() {
         System.out.println("Hello, welcome to the JSS program (CLI version) \\o/\n" +
                 "If you want to close this program, enter 'quit'\n");
@@ -33,8 +35,8 @@ public abstract class CLIMenu {
      */
     protected void showDispatcherMenu() {
         boolean correct;
-        // begin affectations
         Dispatcher dispatcher = new Dispatcher(simulation);
+
         do {
             correct = true;
             System.out.println("Please select a dispatcher algorithm : " +
@@ -58,10 +60,15 @@ public abstract class CLIMenu {
                     correct = false;
                     break;
             }
-        }while(!correct);
+        } while(!correct);
+
         simulation.showSettlers();
         simulation.showJealous();
     }
 
+    /**
+     * Displays the menu. This method runs as long the {@link CLIReader} is open
+     * or until its {@link OnReaderClosedListener} is called back.
+     */
     protected abstract void display();
 }
