@@ -1,5 +1,4 @@
-import env.Dispatcher;
-import env.Simulation;
+import simulation.Simulation;
 import file_manager.ColonyReader;
 import ui.MainMenu;
 import ui.FileMenu;
@@ -21,7 +20,7 @@ public class Main {
                 Simulation simulation = cr.initSimulation();
                 FileMenu fileMenu = new FileMenu(simulation, path);
                 fileMenu.start();
-            } catch (IOException e) { //auto close
+            } catch(IOException e) { //auto close
                 System.out.println("Path " + path + " invalid" +
                         "\nHow to use?" +
                         "\n`java Main [path/to/colony/file.txt]` with 'file.txt' your colony file");

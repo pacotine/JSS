@@ -1,7 +1,7 @@
 package ui;
 
-import env.Dispatcher;
-import env.Simulation;
+import simulation.Dispatcher;
+import simulation.Simulation;
 
 /**
  * This class manages interaction between the user and the simulation of resource allocation to a colony.

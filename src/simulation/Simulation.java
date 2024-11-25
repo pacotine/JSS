@@ -1,4 +1,4 @@
-package env;
+package simulation;
 
 import model.Resource;
 import model.Settler;

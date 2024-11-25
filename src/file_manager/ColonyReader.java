@@ -1,6 +1,6 @@
 package file_manager;
 
-import env.Simulation;
+import simulation.Simulation;
 import model.Resource;
 import model.Settler;
 

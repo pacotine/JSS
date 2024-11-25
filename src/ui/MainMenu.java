@@ -1,7 +1,6 @@
 package ui;
 
-import env.Dispatcher;
-import env.Simulation;
+import simulation.Simulation;
 
 import java.util.Arrays;
 

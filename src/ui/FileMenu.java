@@ -1,6 +1,6 @@
 package ui;
 
-import env.Simulation;
+import simulation.Simulation;
 import file_manager.AffectationsWriter;
 
 import java.io.IOException;

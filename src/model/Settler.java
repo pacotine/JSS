@@ -6,7 +6,7 @@ import java.util.*;
  * A <i>settler</i> represents an agent in the assignment problem. It has :
  * <ul>
  * <li> a unique name
- * <li> an ordered list of resources (see {@link env.Simulation})
+ * <li> an ordered list of resources (see {@link simulation.Simulation})
  * <li> a list of settlers he doesn't like (called <i>bad relations</i>)
  * <li> a unique affectation
  * </ul>
