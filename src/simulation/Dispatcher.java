@@ -1,9 +1,17 @@
-package env;
+package simulation;
 
 import model.Resource;
 import model.Settler;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+import java.util.Queue;
+import java.util.ArrayDeque;
 
 /**
  * A <i>dispatcher</i> is a metaphor of a centralized perspective of an allocation problem. Here, we can consider

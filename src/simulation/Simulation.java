@@ -1,4 +1,4 @@
-package env;
+package simulation;
 
 import model.Resource;
 import model.Settler;
@@ -40,6 +40,11 @@ public class Simulation {
         this.resources = new HashMap<>();
         this.settlers = new HashMap<>();
         init(n);
+    }
+
+    public Simulation(Map<String, Settler> settlers, Map<String, Resource> resources) {
+        this.resources = resources;
+        this.settlers = settlers;
     }
 
     /**
