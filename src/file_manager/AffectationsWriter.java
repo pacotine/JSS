@@ -8,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class AffectationsWriter {
-    private Simulation simulation;
-    private File file;
+    private final Simulation simulation;
+    private final File file;
 
     public AffectationsWriter(Simulation simulation, String path) throws IOException {
         this.file = new File(path);

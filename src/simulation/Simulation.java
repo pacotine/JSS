@@ -27,8 +27,8 @@ import java.util.Collections;
  * Here, it's a {@link Dispatcher} that will allocate (dispatch) resources to settlers according to the method used.
  */
 public class Simulation {
-    private Map<String, Resource> resources;
-    private Map<String, Settler> settlers;
+    private final Map<String, Resource> resources;
+    private final Map<String, Settler> settlers;
 
     private static final char[] ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 

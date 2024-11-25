@@ -6,7 +6,7 @@ import file_manager.AffectationsWriter;
 import java.io.IOException;
 
 public class FileMenu extends CLIMenu {
-    private String srcPath;
+    private final String srcPath;
 
     public FileMenu(Simulation simulation, String srcPath) {
         this.simulation = simulation;
