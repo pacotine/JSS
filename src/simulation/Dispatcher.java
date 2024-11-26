@@ -77,13 +77,10 @@ public class Dispatcher {
             Collections.shuffle(settlers);
             List<Settler> N = new ArrayList<>(settlers);
 
-            //System.out.println("shuffle : " + settlers.stream().map(Settler::getName).toList()
-                    //+ " with O = " + O + "/" + simulation.getResources());
             Set<Settler> I = maxIndependentSet(N);
 
             while(!N.isEmpty()) {
                 N.removeAll(I);
-                //System.out.println("rest (N\\I) : " + N.stream().map(Settler::getName).toList());
                 I = maxIndependentSet(N);
             }
 
@@ -121,7 +118,6 @@ public class Dispatcher {
             Q.removeAll(neighbors);
 
             Resource pi = getBestAffectation(independent);
-            //System.out.println("Give " + pi + " to " + independent.getName());
             assert pi != null;
             independent.setAffectation(pi);
             pi.setAffected(true);
@@ -137,7 +133,6 @@ public class Dispatcher {
      */
     private static Resource getBestAffectation(Settler s) {
         //gives the best available (O = map(r -> r not affected))
-        //System.out.println(s.getName() + "/" + Arrays.toString(s.getPreferences()) + "/" + available);
         for(Resource pref : s.getPreferences()) {
             if(!pref.isAffected()) return pref;
         }
