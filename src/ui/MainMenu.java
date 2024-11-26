@@ -115,7 +115,7 @@ public class MainMenu extends CLIMenu {
                     System.out.println("Invalid input (select 1, 2 or 3)");
                     break;
             }
-        } while(true);
+        } while(reader.isOpen());
     }
 
     /**
