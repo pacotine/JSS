@@ -29,17 +29,14 @@ public class FileMenu extends CLIMenu {
      */
     @Override
     protected void display() {
-        System.out.println("Please select an option : " +
-                "\n\t1. resolution" +
-                "\n\t2. save yours affectations"
-        );
+        System.out.println("Please select an option :\n\t1. resolution\n\t2. save yours affectations");
         String res = reader.readInput();
         switch(res) {
-            case "1":
+            case INPUT_ONE:
                 simulation.clear();
                 showDispatcherMenu();
                 break;
-            case "2":
+            case INPUT_TWO:
                 showSaveMenu();
                 break;
             default:

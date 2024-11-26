@@ -27,13 +27,13 @@ public class MainMenu extends CLIMenu {
         String res = reader.readInput();
 
         switch(res) {
-            case "1":
+            case INPUT_ONE:
                 askRelations();
                 break;
-            case "2":
+            case INPUT_TWO:
                 askPreferences();
                 break;
-            case "3":
+            case INPUT_THREE:
                 if(simulation.checkIfStable()) {
                     System.out.println("/!\\\nEverything seems completed! Now, we're gonna find a solution\n");
                     showDispatcherMenu();
@@ -99,15 +99,15 @@ public class MainMenu extends CLIMenu {
             String res = reader.readInput();
 
             switch(res) {
-                case "1":
+                case INPUT_ONE:
                     askSwitch();
                     simulation.showSettlers();
                     break;
-                case "2":
+                case INPUT_TWO:
                     simulation.showSettlers();
                     simulation.showJealous();
                     break;
-                case "3":
+                case INPUT_THREE:
                     simulation.clear();
                     showDispatcherMenu();
                     break;

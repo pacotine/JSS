@@ -9,6 +9,9 @@ import simulation.Simulation;
 public abstract class CLIMenu {
     protected final CLIReader reader;
     protected Simulation simulation;
+    protected static final String INPUT_ONE = "1";
+    protected static final String INPUT_TWO = "2";
+    protected static final String INPUT_THREE = "3";
 
     /**
      * Constructs a {@link CLIMenu} by initializing a {@link CLIReader}.
@@ -46,12 +49,12 @@ public abstract class CLIMenu {
             String res = reader.readInput();
 
             switch(res) {
-                case "1":
+                case INPUT_ONE:
                     // assign with linear algorithm
                     System.out.println("Linear dispatch : ");
                     dispatcher.linearDispatch();
                     break;
-                case "2":
+                case INPUT_TWO:
                     // assign with MAX-LEF p-approx algorithm
                     System.out.println("\n\nMAX-LEF dispatch : ");
                     dispatcher.maxLEFDispatch(simulation.getSettlers().size());
