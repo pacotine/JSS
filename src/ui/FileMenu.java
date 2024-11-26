@@ -29,7 +29,12 @@ public class FileMenu extends CLIMenu {
      */
     @Override
     protected void display() {
-        System.out.println("Please select an option :\n\t1. resolution\n\t2. save yours affectations");
+        System.out.println("""
+                Please select an option :\
+                
+                \t1. resolution\
+                
+                \t2. save yours affectations""");
         String res = reader.readInput();
         switch(res) {
             case INPUT_ONE:

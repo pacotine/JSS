@@ -23,7 +23,14 @@ public class MainMenu extends CLIMenu {
         }
         simulation.showSettlers();
 
-        System.out.println("Please select an option :\n\t1. add a relation between two settlers\n\t2. add preferences to a settler\n\t3. confirm");
+        System.out.println("""
+                Please select an option :\
+                
+                \t1. add a relation between two settlers\
+                
+                \t2. add preferences to a settler\
+                
+                \t3. confirm""");
         String res = reader.readInput();
 
         switch(res) {
@@ -35,7 +42,11 @@ public class MainMenu extends CLIMenu {
                 break;
             case INPUT_THREE:
                 if(simulation.checkIfStable()) {
-                    System.out.println("/!\\\nEverything seems completed! Now, we're gonna find a solution\n");
+                    System.out.println("""
+                            /!\\\
+                            
+                            Everything seems completed! Now, we're gonna find a solution
+                            """);
                     showDispatcherMenu();
                     showSubMenu();
                 }
@@ -94,7 +105,15 @@ public class MainMenu extends CLIMenu {
     private void showSubMenu() {
         System.out.println("Now you can change affectations and see jealous settlers");
         do {
-            System.out.println("\nPlease select an option :\n\t1. switch affectations between 2 settlers\n\t2. see all jealous settlers\n\t3. choose another algorithm"
+            System.out.println("""
+                    
+                    Please select an option :\
+                    
+                    \t1. switch affectations between 2 settlers\
+                    
+                    \t2. see all jealous settlers\
+                    
+                    \t3. choose another algorithm"""
             );
             String res = reader.readInput();
 

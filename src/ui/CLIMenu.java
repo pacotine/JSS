@@ -24,8 +24,10 @@ public abstract class CLIMenu {
      * Sets {@link OnReaderClosedListener} for the reader and starts displaying menu.
      */
     public void start() {
-        System.out.println("Hello, welcome to the JSS program (CLI version) \\o/\n" +
-                "If you want to close this program, enter 'quit'\n");
+        System.out.println("""
+                Hello, welcome to the JSS program (CLI version) \\o/
+                If you want to close this program, enter 'quit'
+                """);
         reader.setOnReaderClosedListener(() -> {
             System.out.println("Exiting menu... Bye!");
             System.exit(0);
@@ -42,9 +44,12 @@ public abstract class CLIMenu {
 
         do {
             correct = true;
-            System.out.println("Please select a dispatcher algorithm : " +
-                    "\n\t1. linear" +
-                    "\n\t2. MAX-LEF p-approx"
+            System.out.println("""
+                    Please select a dispatcher algorithm : \
+                    
+                    \t1. linear\
+                    
+                    \t2. MAX-LEF p-approx"""
             );
             String res = reader.readInput();
 
@@ -56,7 +61,9 @@ public abstract class CLIMenu {
                     break;
                 case INPUT_TWO:
                     // assign with MAX-LEF p-approx algorithm
-                    System.out.println("\n\nMAX-LEF dispatch : ");
+                    System.out.println("""
+                            
+                            MAX-LEF dispatch :\s""");
                     dispatcher.maxLEFDispatch(simulation.getSettlers().size());
                     break;
                 default:
