@@ -208,10 +208,6 @@ public class Simulation {
                     return resource;
                 })
                 .toArray(Resource[]::new);
-        //Resource[] preferences = new Resource[preferencesNames.length];
-        //for(int i = 0; i < preferences.length; i++) {
-          //  preferences[i] = resources.get(preferencesNames[i]);
-        //}
 
         s.setPreferences(preferences);
     }
