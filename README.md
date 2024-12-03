@@ -18,6 +18,12 @@ or jeopardise the colony's survival.
 
 # Installation
 
+## Dependencies
+
+The minimum required JDK version for this project is 21.\
+Java also needs to be installed on your machine (it is recommended to have [a configured PATH system variable for Java](https://www.java.com/en/download/help/path.html)).
+
+## Run JAR
 Download the latest version of the `.jar` file in [release section](https://github.com/pacotine/JSS/releases/tag/v1.0.0) of this repository then you can run the application
 with the following command: 
 ```
