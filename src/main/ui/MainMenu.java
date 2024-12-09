@@ -5,7 +5,7 @@ import main.simulation.Simulation;
 import java.util.Arrays;
 
 /**
- * This class manages interaction between the user and the main.simulation of resource allocation to a colony, manually defined.
+ * This class manages interaction between the user and the simulation of resource allocation to a colony, manually defined.
  */
 public class MainMenu extends CLIMenu {
 
@@ -59,7 +59,7 @@ public class MainMenu extends CLIMenu {
     }
 
     /**
-     * Asks the user the number of settlers in the colony before initializing a classic main.simulation.
+     * Asks the user the number of settlers in the colony before initializing a classic simulation.
      */
     private void init() {
         int n = askN();
@@ -67,15 +67,15 @@ public class MainMenu extends CLIMenu {
     }
 
     /**
-     * Initializes a random main.simulation with {@link Simulation#random(int, int)}.
+     * Initializes a random simulation with {@link Simulation#random(int, int)}.
      */
     private void initRandom() {
         this.simulation = Simulation.random(15, 3);
     }
 
     /**
-     * Uses the {@link CLIReader} to ask the number of settlers for this main.simulation to the user.
-     * @return the number of settlers for this main.simulation
+     * Uses the {@link CLIReader} to ask the number of settlers for this simulation to the user.
+     * @return the number of settlers for this simulation
      * @throws InputException if the number entered by the user is less than {@code 1} or greater than {@code 26}
      * @throws NumberFormatException if the input is not a number
      */

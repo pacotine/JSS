@@ -27,7 +27,7 @@ class SimulationTest {
         s1.setSettlerPreferences("B1", "R1", "R2");
         assertTrue(s1.checkIfStable());
         Simulation s2 = new Simulation(2);
-        s2.setSettlerPreferences("A1", "R1", "R2");
+        s2.setSettlerPreferences("B1", "R1", "R2");
         assertFalse(s2.checkIfStable());
     }
 
@@ -50,31 +50,49 @@ class SimulationTest {
     }
 
     @Test
-    void getJealousNumber() {
-        Simulation s1 = new Simulation(2);
-        s1.setSettlerPreferences("A1", "R1", "R2");
-        s1.setSettlerPreferences("B1", "R1", "R2");
-        s1.setBadRelations("A1", "B1");
-        s1.affect("A1", "R1");
-        s1.affect("B1", "R2");
-        assertEquals(1, s1.getJealousNumber());
+    void jealousIfBadRelationHasAResourceWithHigherRank() {
+        Simulation simulation = new Simulation(2);
+        simulation.setSettlerPreferences("A1", "R1", "R2");
+        simulation.setSettlerPreferences("B1", "R1", "R2");
+        simulation.setBadRelations("A1", "B1");
+        simulation.affect("A1", "R1");
+        simulation.affect("B1", "R2");
+        assertEquals(1, simulation.getJealousNumber());
+    }
 
-        Simulation s2 = new Simulation(2);
-        s2.setSettlerPreferences("A1", "R1", "R2");
-        s2.setSettlerPreferences("B1", "R1", "R2");
-        s2.affect("A1", "R1");
-        s2.affect("B1", "R2");
-        assertEquals(0, s2.getJealousNumber());
+    @Test
+    void noJealousIfNoBadRelations() {
+        Simulation simulation = new Simulation(2);
+        simulation.setSettlerPreferences("A1", "R1", "R2");
+        simulation.setSettlerPreferences("B1", "R1", "R2");
+        simulation.affect("A1", "R1");
+        simulation.affect("B1", "R2");
+        assertEquals(0, simulation.getJealousNumber());
+    }
 
-        Simulation s3 = new Simulation(3);
-        s3.setSettlerPreferences("A1", "R1", "R2", "R3");
-        s3.setSettlerPreferences("B1", "R1", "R2", "R3");
-        s3.setSettlerPreferences("C1", "R1", "R2", "R3");
-        s3.setBadRelations("A1", "B1");
-        s3.setBadRelations("A1", "C1");
-        s3.affect("A1", "R3");
-        s3.affect("B1", "R1");
-        s3.affect("C1", "R2");
-        assertEquals(1, s3.getJealousNumber());
+    @Test
+    void jealousSettlerCountedOnlyOnce() {
+        Simulation simulation = new Simulation(3);
+        simulation.setSettlerPreferences("A1", "R1", "R2", "R3");
+        simulation.setSettlerPreferences("B1", "R1", "R2", "R3");
+        simulation.setSettlerPreferences("C1", "R1", "R2", "R3");
+        simulation.setBadRelations("A1", "B1");
+        simulation.setBadRelations("A1", "C1");
+        simulation.affect("A1", "R3");
+        simulation.affect("B1", "R1");
+        simulation.affect("C1", "R2");
+        assertEquals(1, simulation.getJealousNumber());
+    }
+
+    @Test
+    void clearClearsAffectations() {
+        Simulation simulation = new Simulation(2);
+        simulation.affect("A1", "R1");
+        simulation.affect("B1", "R2");
+        assertNotNull(simulation.getSettlersMap().get("A1").getAffectation());
+        assertNotNull(simulation.getSettlersMap().get("B1").getAffectation());
+        simulation.clear();
+        assertNull(simulation.getSettlersMap().get("A1").getAffectation());
+        assertNull(simulation.getSettlersMap().get("B1").getAffectation());
     }
 }

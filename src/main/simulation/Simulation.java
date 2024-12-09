@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * This class represents the main.simulation of a colony where each
+ * This class represents the simulation of a colony where each
  * settler fights for the best available resource against its enemy in the colony.
  * <br>
- * A main.simulation is the set of a <a href="https://en.wikipedia.org/wiki/Resource_allocation">resource allocation problem</a>.
+ * A simulation is the set of a <a href="https://en.wikipedia.org/wiki/Resource_allocation">resource allocation problem</a>.
  * Given a set of agents N = {1, ..., n} and a set of indivisible resources O = {o1, ..., or},
  * the number of resources is equal to the number of agents, i.e., r = n, and each settler
  * i ∈ N should receive exactly one resource o ∈ O.
@@ -50,10 +50,10 @@ public class Simulation {
     /**
      * Constructs a new {@link Simulation} with the specified number of settlers {@code n} by random states :
      * each of the {@code n} settlers will have a maximum specified number {@code d} of enemy (<i>bad relations</i>) in the colony,
-     * and their preferences will be random (by shuffling the resources set of this main.simulation).
+     * and their preferences will be random (by shuffling the resources set of this simulation).
      * @param n the number of settlers (and so resources) in the colony
      * @param d the density of <i>bad relations</i> (each settler will have a random set of enemy between {@code 0} and {@code d})
-     * @return the random main.simulation instance
+     * @return the random simulation instance
      */
     public static Simulation random(int n, int d) {
         //d is density of the graph
@@ -79,7 +79,7 @@ public class Simulation {
     }
 
     /**
-     * Initializes the (classic) main.simulation.
+     * Initializes the (classic) simulation.
      * Each settler will be named by a letter of the alphabet + a number if duplicates.
      * Each resource will be named by {@code R} + a unique number.
      * @param n the number of settlers in the colony
@@ -213,21 +213,19 @@ public class Simulation {
     }
 
     /**
-     * Checks whether this main.simulation is <i>stable</i> or not. A main.simulation is stable if each of the {@code n} settlers
+     * Checks whether this simulation is <i>stable</i> or not. A simulation is stable if each of the {@code n} settlers
      * has an ordered set of preferences of size {@code n}.
-     * @return {@code true} if the main.simulation is stable, {@code false} otherwise
+     * @return {@code true} if the simulation is stable, {@code false} otherwise
      */
     public boolean checkIfStable() {
-        boolean correct = true;
-        int n = resources.size();
         for(Settler settler : settlers.values()) {
-            if(!settler.checkPreferences(n)) correct = false;
+            if(!settler.checkPreferences(resources.size())) return false;
         }
-        return correct;
+        return true;
     }
 
     /**
-     * Clears the main.simulation. That means, clear the affectation for all settlers.
+     * Clears the simulation. That means, clear the affectation for all settlers.
      */
     public void clear() {
         for(Settler s : settlers.values()) {
@@ -250,16 +248,16 @@ public class Simulation {
     }
 
     /**
-     * Retrieves the colony, i.e, returns the {@link List} of settlers in the main.simulation.
-     * @return the list of settlers in the main.simulation
+     * Retrieves the colony, i.e, returns the {@link List} of settlers in the simulation.
+     * @return the list of settlers in the simulation
      */
     public List<Settler> getSettlers() {
         return settlers.values().stream().toList();
     }
 
     /**
-     * Retrieves the {@link Map} of tuples (settler's name, settler object) for this main.simulation.
-     * @return the {@link Map} of tuples (settler's name, settler object) for this main.simulation.
+     * Retrieves the {@link Map} of tuples (settler's name, settler object) for this simulation.
+     * @return the {@link Map} of tuples (settler's name, settler object) for this simulation.
      */
     public Map<String, Settler> getSettlersMap() {
         return settlers;
