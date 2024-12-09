@@ -1,7 +1,7 @@
-package ui;
+package main.ui;
 
-import simulation.Dispatcher;
-import simulation.Simulation;
+import main.simulation.Dispatcher;
+import main.simulation.Simulation;
 
 /**
  * This class represents an interactive menu which the user can quit at any time by pressing {@code quit}.

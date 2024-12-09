@@ -1,7 +1,7 @@
-package model;
+package main.model;
 
 /**
- * A resource is a unique element of a {@link simulation.Simulation}, which can be assigned to one and only one {@link Settler}.
+ * A resource is a unique element of a {@link main.simulation.Simulation}, which can be assigned to one and only one {@link Settler}.
  */
 public class Resource {
     private final String name;

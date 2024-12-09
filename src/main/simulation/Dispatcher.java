@@ -1,7 +1,7 @@
-package simulation;
+package main.simulation;
 
-import model.Resource;
-import model.Settler;
+import main.model.Resource;
+import main.model.Settler;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -22,8 +22,8 @@ public class Dispatcher {
     private final Simulation simulation;
 
     /**
-     * Constructs a {@link Dispatcher} for the specified simulation.
-     * @param simulation the simulation within the dispatcher is trying to solve the problem
+     * Constructs a {@link Dispatcher} for the specified main.simulation.
+     * @param simulation the main.simulation within the dispatcher is trying to solve the problem
      */
     public Dispatcher(Simulation simulation) {
         this.simulation = simulation;
@@ -63,7 +63,7 @@ public class Dispatcher {
      * More precisely, the algorithm implemented here is a {@code |I|/n}-approximate algorithm of MAX-LEF.
      * <br>
      * So, in order to obtain better results and tend towards the optimal, we repeat this algorithm on various instances
-     * of the simulation with a different running order each time
+     * of the main.simulation with a different running order each time
      * (each instance can give a different set of independent settlers {@code I}, and thus play on the result).
      * @param inst the number of instances of this algorithm's execution
      */

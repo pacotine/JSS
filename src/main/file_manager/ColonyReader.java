@@ -1,8 +1,8 @@
-package file_manager;
+package main.file_manager;
 
-import simulation.Simulation;
-import model.Resource;
-import model.Settler;
+import main.simulation.Simulation;
+import main.model.Resource;
+import main.model.Settler;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 /**
  * A utility class for reading and parsing colony data files, initializing
- * a simulation with settlers, resources, relationships, and preferences.
+ * a main.simulation with settlers, resources, relationships, and preferences.
  * Implements {@link AutoCloseable} to manage file resources.
  */
 public class ColonyReader implements AutoCloseable {
@@ -133,7 +133,7 @@ public class ColonyReader implements AutoCloseable {
     }
 
     /**
-     * Parses the colony file to retrieve simulation data, ensuring validity of all sections.
+     * Parses the colony file to retrieve main.simulation data, ensuring validity of all sections.
      *
      * @throws ColonyFileFormatException if the file format is invalid
      */
@@ -168,7 +168,7 @@ public class ColonyReader implements AutoCloseable {
                     "but there are " + settlersNames.size() + " distinct names for " + resources.size() + " distinct resources");
         }
 
-        this.simulation = new Simulation(settlers, resources); //create simulation
+        this.simulation = new Simulation(settlers, resources); //create main.simulation
 
         //checking optional BAD_RELATIONS section
         readSection(ColonyFileMethods.BAD_RELATIONS, line -> {
@@ -260,10 +260,10 @@ public class ColonyReader implements AutoCloseable {
     }
 
     /**
-     * Initializes the simulation with parsed data and validates its stability.
+     * Initializes the main.simulation with parsed data and validates its stability.
      *
      * @return the initialized {@link Simulation}
-     * @throws ColonyFileFormatException if the simulation is unstable or invalid
+     * @throws ColonyFileFormatException if the main.simulation is unstable or invalid
      */
     public Simulation initSimulation() throws ColonyFileFormatException {
         if(!simulation.checkIfStable()) throw new ColonyFileFormatException("Simulation is not stable");

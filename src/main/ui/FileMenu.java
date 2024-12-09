@@ -1,20 +1,20 @@
-package ui;
+package main.ui;
 
-import simulation.Simulation;
-import file_manager.AffectationsWriter;
+import main.simulation.Simulation;
+import main.file_manager.AffectationsWriter;
 
 import java.io.IOException;
 
 /**
- * This class manages interaction between the user and the simulation of resource allocation to a colony,
- * defined by a file with precise syntax (see {@link file_manager.ColonyReader}).
+ * This class manages interaction between the user and the main.simulation of resource allocation to a colony,
+ * defined by a file with precise syntax (see {@link main.file_manager.ColonyReader}).
  */
 public class FileMenu extends CLIMenu {
     private final String srcPath;
 
     /**
-     * Constructs a new {@link FileMenu} with the specified simulation and source path to colony file.
-     * @param simulation a fully defined simulation
+     * Constructs a new {@link FileMenu} with the specified main.simulation and source path to colony file.
+     * @param simulation a fully defined main.simulation
      * @param srcPath the source path to colony file
      */
     public FileMenu(Simulation simulation, String srcPath) {

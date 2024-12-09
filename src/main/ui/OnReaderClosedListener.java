@@ -1,4 +1,4 @@
-package ui;
+package main.ui;
 
 /**
  * Callback to be invoked when a {@link CLIReader} closes.

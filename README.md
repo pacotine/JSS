@@ -3,7 +3,7 @@
 
 ## Context
 This code is produced as part of a third year Bachelor degree mini-project.
-The principal objectives were to acquire the ability to model problems within a OOP paradigm as a means of problem-solving
+The principal objectives were to acquire the ability to main.model problems within a OOP paradigm as a means of problem-solving
 and to gain proficiency in the use of the Java programming language.
 
 ## Story
@@ -63,7 +63,7 @@ Note that the `.` at the end of each line is mandatory.
 
 # Problem-solving
 ## Model
-A simulation is the set of [resource allocation problem](https://en.wikipedia.org/wiki/Resource_allocation").
+A main.simulation is the set of [resource allocation problem](https://en.wikipedia.org/wiki/Resource_allocation").
 Given a set of agents $N=\{1, \dots, n\}$ and a set of indivisible resources $O=\{o_{1}, \dots, o_{r}\}$,
 the number of resources is equal to the number of agents, _i.e._, $r = n$, and each settler
 $i \in N$ should receive exactly one resource $o \in O$.
@@ -92,7 +92,7 @@ For a maximization problem, an algorithm is $p$-approximate, with $p \in [0, 1]$
 whose value is at least $p$-times the optimal value, for any instance.
 More precisely, the algorithm implemented here is a $\frac{|I|}{n}$-approximate algorithm of _**MAX-LEF**_.
 So, in order to obtain better results and tend towards the optimal, we repeat this algorithm on various instances
-of the simulation with a different running order each time
+of the main.simulation with a different running order each time
 (each instance can give a different set of independent settlers $I$, and thus play on the result).
 
 We believe this to be the best possible solution to the problem in a realistic time complexity.

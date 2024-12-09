@@ -1,4 +1,4 @@
-package ui;
+package main.ui;
 
 /**
  * This exception is a {@link RuntimeException} indicating incorrect input during a stream read by a {@link CLIReader}.
