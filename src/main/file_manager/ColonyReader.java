@@ -1,8 +1,8 @@
-package file_manager;
+package main.file_manager;
 
-import simulation.Simulation;
-import model.Resource;
-import model.Settler;
+import main.simulation.Simulation;
+import main.model.Resource;
+import main.model.Settler;
 
 import java.io.File;
 import java.io.IOException;

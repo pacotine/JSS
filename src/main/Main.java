@@ -1,7 +1,9 @@
-import simulation.Simulation;
-import file_manager.ColonyReader;
-import ui.MainMenu;
-import ui.FileMenu;
+package main;
+
+import main.simulation.Simulation;
+import main.file_manager.ColonyReader;
+import main.ui.MainMenu;
+import main.ui.FileMenu;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class Main {
             } catch(IOException e) { //auto close
                 System.out.println("Path " + path + " invalid" +
                         "\nHow to use?" +
-                        "\n`java Main [path/to/colony/file.txt]` with 'file.txt' your colony file");
+                        "\n`java main.Main [path/to/colony/file.txt]` with 'file.txt' your colony file");
             }
         }
     }

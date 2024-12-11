@@ -1,4 +1,4 @@
-package ui;
+package main.ui;
 
 import java.io.Closeable;
 import java.util.ArrayList;

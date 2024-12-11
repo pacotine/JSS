@@ -1,4 +1,4 @@
-package file_manager;
+package main.file_manager;
 
 /**
  * Exception class for handling errors related to the format of colony data files.
