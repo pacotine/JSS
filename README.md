@@ -64,7 +64,7 @@ Note that the `.` at the end of each line is mandatory.
 # Problem-solving
 ## Model
 A simulation is the set of [resource allocation problem](https://en.wikipedia.org/wiki/Resource_allocation").
-Given a set of agents $N=\{1, \dots, n\}$ and a set of indivisible resources $O=\{o_{1}, \dots, o_{r}\}$,
+Given a set of agents $`N=\{1, \dots, n\}`$ and a set of indivisible resources $`O=\{o_{1}, \dots, o_{r}\}`$,
 the number of resources is equal to the number of agents, _i.e._, $r = n$, and each settler
 $i \in N$ should receive exactly one resource $o \in O$.
 
