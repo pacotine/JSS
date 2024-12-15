@@ -3,7 +3,7 @@
 
 ## Context
 This code is produced as part of a third year Bachelor degree mini-project.
-The principal objectives were to acquire the ability to model problems within a OOP paradigm as a means of problem-solving
+The principal objectives were to acquire the ability to main.model problems within a OOP paradigm as a means of problem-solving
 and to gain proficiency in the use of the Java programming language.
 
 ## Story
@@ -19,10 +19,16 @@ or jeopardise the colony's survival.
 # Installation
 
 ## Dependencies
-
+### For all users
 The minimum required JDK version for this project is 21.\
 Java also needs to be installed on your machine (it is recommended to have [a configured PATH system variable for Java](https://www.java.com/en/download/help/path.html)).
-
+### For developers (building from source and unit tests)
+Please make sure you have [Maven](https://maven.apache.org/install.html) installed on your machine.\
+Clone this repository and run the following commands in root folder downloaded:
+- Clean and build the project with `mvn clean install`
+- This will build and create a JAR executable file `target/JSS-[version].jar` where `[version]` is the release version
+- For execution instructions, see [Run JAR](#run-jar) section
+- You can also run tests with `mvn test`
 ## Run JAR
 Download the latest version of the `.jar` file in [release section](https://github.com/pacotine/JSS/releases/tag/v1.0.0) of this repository then you can run the application
 with the following command: 
@@ -92,7 +98,7 @@ For a maximization problem, an algorithm is $p$-approximate, with $p \in [0, 1]$
 whose value is at least $p$-times the optimal value, for any instance.
 More precisely, the algorithm implemented here is a $\frac{|I|}{n}$-approximate algorithm of _**MAX-LEF**_.
 So, in order to obtain better results and tend towards the optimal, we repeat this algorithm on various instances
-of the simulation with a different running order each time
+of the main.simulation with a different running order each time
 (each instance can give a different set of independent settlers $I$, and thus play on the result).
 
 We believe this to be the best possible solution to the problem in a realistic time complexity.

@@ -1,6 +1,6 @@
-package ui;
+package main.ui;
 
-import simulation.Simulation;
+import main.simulation.Simulation;
 
 import java.util.Arrays;
 

@@ -1,8 +1,8 @@
-package file_manager;
+package main.file_manager;
 
-import simulation.Simulation;
-import model.Resource;
-import model.Settler;
+import main.simulation.Simulation;
+import main.model.Resource;
+import main.model.Settler;
 
 import java.io.File;
 import java.io.IOException;
@@ -202,6 +202,7 @@ public class ColonyReader implements AutoCloseable {
     private void readSection(ColonyFileMethods method, Consumer<String> processLine) throws ColonyFileFormatException {
         String line;
         while((line = readLine()) != null) {
+            if(line.isEmpty()) continue;
             ColonyFileMethods currentMethod = method(line);
             //example : blabla(hello) -> blabla doesn't exist
             if(currentMethod == null) throw new ColonyFileFormatException.InvalidMethodException(line, lineIndex);

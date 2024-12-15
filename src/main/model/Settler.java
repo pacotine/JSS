@@ -1,4 +1,4 @@
-package model;
+package main.model;
 
 import java.util.*;
 
@@ -6,7 +6,7 @@ import java.util.*;
  * A <i>settler</i> represents an agent in the assignment problem. It has :
  * <ul>
  * <li> a unique name
- * <li> an ordered list of resources (see {@link simulation.Simulation})
+ * <li> an ordered list of resources (see {@link main.simulation.Simulation})
  * <li> a list of settlers he doesn't like (called <i>bad relations</i>)
  * <li> a unique affectation
  * </ul>
@@ -78,6 +78,13 @@ public class Settler {
         if(affectation == null) this.affectationRank = -1;
         else this.affectationRank = Arrays.asList(preferences).indexOf(affectation);
     }
+
+    /**
+     * Retrieves the affectation rank, i.e. the rank of the resource affected to this settler (according to its preferences).
+     * If this settler has no preferences when a resource is affected to it, then this method returns -1.
+     * @return the settler affectation rank
+     */
+    public int getAffectationRank() { return affectationRank; }
 
     /**
      * Retrieves the name of the settler.

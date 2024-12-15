@@ -1,7 +1,7 @@
-package simulation;
+package main.simulation;
 
-import model.Resource;
-import model.Settler;
+import main.model.Resource;
+import main.model.Settler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -218,12 +218,10 @@ public class Simulation {
      * @return {@code true} if the simulation is stable, {@code false} otherwise
      */
     public boolean checkIfStable() {
-        boolean correct = true;
-        int n = resources.size();
         for(Settler settler : settlers.values()) {
-            if(!settler.checkPreferences(n)) correct = false;
+            if(!settler.checkPreferences(resources.size())) return false;
         }
-        return correct;
+        return true;
     }
 
     /**

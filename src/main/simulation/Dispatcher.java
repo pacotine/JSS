@@ -1,7 +1,7 @@
-package simulation;
+package main.simulation;
 
-import model.Resource;
-import model.Settler;
+import main.model.Resource;
+import main.model.Settler;
 
 import java.util.Set;
 import java.util.HashSet;
