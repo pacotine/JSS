@@ -19,10 +19,14 @@ or jeopardise the colony's survival.
 # Installation
 
 ## Dependencies
-
+### For all users
 The minimum required JDK version for this project is 21.\
 Java also needs to be installed on your machine (it is recommended to have [a configured PATH system variable for Java](https://www.java.com/en/download/help/path.html)).
-
+### For developers (unit tests)
+Please make sure you have [Maven](https://maven.apache.org/install.html) installed on your machine if you want to build
+dependencies for unit tests.\
+Then, clean and build the project with `mvn clean install`.\
+You can now build and run tests with `mvn test`.
 ## Run JAR
 Download the latest version of the `.jar` file in [release section](https://github.com/pacotine/JSS/releases/tag/v1.0.0) of this repository then you can run the application
 with the following command: 
