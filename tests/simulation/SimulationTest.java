@@ -1,4 +1,4 @@
-package test.simulation;
+package simulation;
 
 import main.model.Settler;
 import main.simulation.Simulation;
