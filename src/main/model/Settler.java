@@ -80,6 +80,13 @@ public class Settler {
     }
 
     /**
+     * Retrieves the affectation rank, i.e. the rank of the resource affected to this settler (according to its preferences).
+     * If this settler has no preferences when a resource is affected to it, then this method returns -1.
+     * @return the settler affectation rank
+     */
+    public int getAffectationRank() { return affectationRank; }
+
+    /**
      * Retrieves the name of the settler.
      * @return the name of the settler
      */
