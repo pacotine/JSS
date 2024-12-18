@@ -137,7 +137,7 @@ and average minimization result.
 |                    | `MAX-LEF`   | 20951.470         | **444**        |
 
 You can find the JMH output file [here](https://github.com/user-attachments/files/18187016/benchmark.txt).
-All input files are also available in the [assets folder](assets/benchmark/)
+All input files are also available in the [assets folder](assets/benchmark).
 
 # Optimum resolution
 [MAX-LEF is a p-approximation algorithm](#_max-lef_-dispatch), meaning it gives the theoretical approximation bound for an instance of this problem.
