@@ -113,25 +113,38 @@ This table shows our three benchmarks of different colony size.
 | **colony size**     | 100          | 500          | 1000          |
 | **graph density**\* | ~50%         | ~64%         | ~84%          |
 
-\*graph density is definied in this context by the average number of bad relations of settlers.
+\*the density of the graph is defined in this context as the ratio between the average
+number of bad relations of the settlers and the size of the colony.
 
-And this table shows the results. As you can see, our MAX-LEF algorithm outperforms in terms of minimizing the number of jealous settlers, for a lower execution time than
-the classic brute force switch algorithm.
+And the table below shows the results. Please note that `switch` and `MAX-LEF` parameters are $n$.\
+As you can see, our [MAX-LEF dispatch method](#_max-lef_-dispatch) outperforms in terms
+of minimizing the number of jealous settlers, for a lower execution time than the classic brute force switch algorithm.
+These figures show how $n$ instances of `MAX-LEF` can be an optimal compromise between execution time 
+and average minimization result. 
 
-|                   | algorithm | average time (ms) | average output |
-| ----------------- | --------- | ----------------- | -------------- |
-|| linear    | 0.080             | 34             |
-|  **benchmark100** | switch    | 25.593            | 32             |
-|| MAX-LEF   | 19.651            | 28             |
-||||
-|| linear    | 4.104             | 208            |
-| **benchmark500**  | switch    | 2668.919          | 202            |
-|| MAX-LEF   | 1855.284          | 188            |
-||||
-|| linear    | 15.261            | 469            |
-| **benchmark1000** | switch    | 36762.073         | 463            |
-|| MAX-LEF   | 20951.470         | 444            |
+|                    | algorithm | average time (ms) | average output |
+|--------------------| --------- | ----------------- |----------------|
+|                    | `linear`    | 0.080             | 34             |
+| **benchmark100**   | `switch`    | 25.593            | 32             |
+|                    | `MAX-LEF`   | 19.651            | **28**         |
+|                    |||
+|                    | `linear`    | 4.104             | 208            |
+| **benchmark500**   | `switch`    | 2668.919          | 202            |
+|                    | `MAX-LEF`   | 1855.284          | **188**        |
+|                    |||
+|                    | `linear`    | 15.261            | 469            |
+| **benchmark1000**  | `switch`    | 36762.073         | 463            |
+|                    | `MAX-LEF`   | 20951.470         | **444**        |
 
 You can find the JMH output file [here](https://github.com/user-attachments/files/18187016/benchmark.txt).
-All input files are also available here.
+All input files are also available in the [assets folder](assets/benchmark/)
 
+# Optimum resolution
+[MAX-LEF is a p-approximation algorithm](#_max-lef_-dispatch), meaning it gives the theoretical approximation bound for an instance of this problem.
+One way of solving this problem exactly would be to use of [integer (linear) programming](https://en.wikipedia.org/wiki/Integer_programming).
+[This paper of the MIT](https://web.mit.edu/15.053/www/AMP-Chapter-09.pdf) discusses these mathematical optimizations.
+In practice, a LP/MIP solver like [the GLPK](https://www.gnu.org/software/glpk/) (for this project [GLPK for Java](https://glpk-java.sourceforge.net/))
+could be used if the problem is correctly formulated as a LP problem.
+
+However, it should be noted that this problem still remains NP-complete, and even with this kind of solver,
+one might come across instances that are hard to solve.
