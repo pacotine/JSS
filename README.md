@@ -103,3 +103,35 @@ of the simulation with a different running order each time
 
 We believe this to be the best possible solution to the problem in a realistic time complexity.
 This approach represents an optimal compromise between the time required for execution and the level of satisfaction with the result.
+
+# Microbenchmarking
+We used [JMH](https://openjdk.org/projects/code-tools/jmh/) for microbenchmarking the three algorithms in this project.\
+This table shows our three benchmarks of different colony size.
+
+|                     | benchmark100 | benchmark500 | benchmark1000 |
+| ------------------- | ------------ | ------------ | ------------- |
+| **colony size**     | 100          | 500          | 1000          |
+| **graph density**\* | ~50%         | ~64%         | ~84%          |
+
+\*graph density is definied in this context by the average number of bad relations of settlers.
+
+And this table shows the results. As you can see, our MAX-LEF algorithm outperforms in terms of minimizing the number of jealous settlers, for a lower execution time than
+the classic brute force switch algorithm.
+
+|                   | algorithm | average time (ms) | average output |
+| ----------------- | --------- | ----------------- | -------------- |
+|| linear    | 0.080             | 34             |
+|  **benchmark100** | switch    | 25.593            | 32             |
+|| MAX-LEF   | 19.651            | 28             |
+||||
+|| linear    | 4.104             | 208            |
+| **benchmark500**  | switch    | 2668.919          | 202            |
+|| MAX-LEF   | 1855.284          | 188            |
+||||
+|| linear    | 15.261            | 469            |
+| **benchmark1000** | switch    | 36762.073         | 463            |
+|| MAX-LEF   | 20951.470         | 444            |
+
+You can find the JMH output file [here](https://github.com/user-attachments/files/18187016/benchmark.txt).
+All input files are also available here.
+
