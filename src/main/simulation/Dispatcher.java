@@ -3,15 +3,7 @@ package main.simulation;
 import main.model.Resource;
 import main.model.Settler;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
-import java.util.Queue;
-import java.util.ArrayDeque;
+import java.util.*;
 
 /**
  * A <i>dispatcher</i> is a metaphor of a centralized perspective of an allocation problem. Here, we can consider
@@ -48,6 +40,37 @@ public class Dispatcher {
                 preference = preferences[++i];
             }
             simulation.affect(settler.getName(), preference.getName());
+        }
+    }
+
+    /**
+     * The switch dispatch consists of brute forcing the problem, by making {@code k} random switches and
+     * keeping the changes only if it's a better configuration for this simulation.
+     * This method is also an approximation algorithm, however, compared to {@link Dispatcher#maxLEFDispatch(int)}
+     * it is far less efficient and effective.
+     * @param k the number of switches
+     */
+    public void switchDispatch(int k) {
+        int i = 0;
+        linearDispatch();
+        List<Settler> settlers = simulation.getSettlers();
+        while(i < k) {
+            Settler p = settlers.get(new Random().nextInt(settlers.size()));
+            int r = p.getBadRelations().isEmpty() ? 0 : new Random().nextInt(p.getBadRelations().size());
+            Settler q = p.getBadRelations().stream()
+                    .skip(r)
+                    .findFirst()
+                    .orElse(null);
+            if(q != null) {
+                String pName = p.getName();
+                String qName = q.getName();
+                int j = simulation.getJealousNumber();
+                simulation.switchAffectations(pName, qName);
+                if (simulation.getJealousNumber() >= j) {
+                    simulation.switchAffectations(pName, qName); //rolling back
+                }
+            }
+            i++;
         }
     }
 

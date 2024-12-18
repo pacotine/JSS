@@ -49,7 +49,10 @@ public abstract class CLIMenu {
                     
                     \t1. linear\
                     
-                    \t2. MAX-LEF p-approx"""
+                    \t2. MAX-LEF p-approx (k)\
+                    
+                    \t3. switch (k)
+                    """
             );
             String res = reader.readInput();
 
@@ -65,6 +68,10 @@ public abstract class CLIMenu {
                             
                             MAX-LEF dispatch :\s""");
                     dispatcher.maxLEFDispatch(simulation.getSettlers().size());
+                    break;
+                case INPUT_THREE:
+                    System.out.println("Switch (brute force) dispatch : ");
+                    dispatcher.switchDispatch(simulation.getSettlers().size());
                     break;
                 default:
                     correct = false;
