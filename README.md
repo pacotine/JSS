@@ -86,6 +86,12 @@ The most straightforward method for allocating resources to settlers is through 
 This approach involves assigning the most desired resource that is still available to each settler, in a sequential manner.
 In reality, this process is $O(n)$ complex, with a significant drawback in that it fails to reduce the number of envious settlers.
 
+### Switch (brute forcing) Dispatch
+The switch dispatch consists of brute forcing the problem, by making $k$ random switches and 
+keeping the changes only if it's a better configuration for this simulation.\
+This method is also an approximation algorithm. However, compared to [MAX-LEF Dispatch method](#_max-lef_-dispatch)
+it is far less efficient and effective.
+
 ### _**MAX-LEF**_ Dispatch
 _**MAX-LEF**_ stands for _Maximum Local Envy Freeness_. It is an algorithm described in [this thesis paper](https://theses.hal.science/tel-03222104v1/document) by Anaëlle Wilczynski [[Section 4.4](https://theses.hal.science/tel-03222104v1/document#section.4.4)].
 The main idea is to choose a specific order to apply a linear dispatch process that minimises local point conflicts by determining an independent set of settlers
