@@ -14,7 +14,6 @@ public class ColonyReaderTest {
         assertEquals(ColonyFileMethods.RESOURCES,ColonyFileMethods.valueOfType("ressource"));
         assertNotEquals(ColonyFileMethods.SETTLERS,ColonyFileMethods.valueOfType("deteste"));
         assertNotEquals(ColonyFileMethods.PREFERENCES,ColonyFileMethods.valueOfType("colon"));
-
     }
 
     @Test
@@ -28,7 +27,6 @@ public class ColonyReaderTest {
         assertFalse(ColonyFileMethods.next(ColonyFileMethods.RESOURCES, ColonyFileMethods.PREFERENCES));
         assertFalse(ColonyFileMethods.next(ColonyFileMethods.BAD_RELATIONS, ColonyFileMethods.PREFERENCES));
         assertFalse(ColonyFileMethods.next(ColonyFileMethods.PREFERENCES, ColonyFileMethods.PREFERENCES));
-
     }
 
 
