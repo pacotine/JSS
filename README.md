@@ -86,6 +86,12 @@ The most straightforward method for allocating resources to settlers is through 
 This approach involves assigning the most desired resource that is still available to each settler, in a sequential manner.
 In reality, this process is $O(n)$ complex, with a significant drawback in that it fails to reduce the number of envious settlers.
 
+### Switch (brute forcing) Dispatch
+The switch dispatch consists of brute forcing the problem, by making $k$ random switches and 
+keeping the changes only if it's a better configuration for this simulation.\
+This method is also an approximation algorithm. However, compared to [MAX-LEF Dispatch method](#_max-lef_-dispatch)
+it is far less efficient and effective.
+
 ### _**MAX-LEF**_ Dispatch
 _**MAX-LEF**_ stands for _Maximum Local Envy Freeness_. It is an algorithm described in [this thesis paper](https://theses.hal.science/tel-03222104v1/document) by Anaëlle Wilczynski [[Section 4.4](https://theses.hal.science/tel-03222104v1/document#section.4.4)].
 The main idea is to choose a specific order to apply a linear dispatch process that minimises local point conflicts by determining an independent set of settlers
@@ -105,8 +111,24 @@ We believe this to be the best possible solution to the problem in a realistic t
 This approach represents an optimal compromise between the time required for execution and the level of satisfaction with the result.
 
 # Microbenchmarking
-We used [JMH](https://openjdk.org/projects/code-tools/jmh/) for microbenchmarking the three algorithms in this project.\
-This table shows our three benchmarks of different colony size.
+We used [JMH](https://openjdk.org/projects/code-tools/jmh/) for microbenchmarking the three algorithms in this project. Below is a detailed breakdown of our benchmarking process, results, and observations.
+
+## Benchmark setup
+The benchmarks were conducted on the following system configuration:
+- **CPU**: 12th Gen Intel i7-1250U (12)
+- **OS**: Ubuntu 24.10 (x86_64)
+- **JDK**: openjdk 21.0.5
+- **JMH Core**: [1.37](https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core/1.37)
+- **JMH Annotation Processors**: [1.37](https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-generator-annprocess/1.37)
+
+## Benchmark configuration
+The benchmarking process was performed using JMH with the following parameters:
+- **Warm-up**: 3 iterations
+- **Measurement iterations**: 10 iterations
+- **Forks**: 1 fork
+
+Each benchmark scenario tested the algorithms under different conditions of colony size and graph density, 
+as shown below:
 
 |                     | benchmark100 | benchmark500 | benchmark1000 |
 | ------------------- | ------------ | ------------ | ------------- |
@@ -114,37 +136,62 @@ This table shows our three benchmarks of different colony size.
 | **graph density**\* | ~50%         | ~64%         | ~84%          |
 
 \*the density of the graph is defined in this context as the ratio between the average
-number of bad relations of the settlers and the size of the colony.
+number of bad relations of the settlers and the size of the colony (for example, in the *benchmark100* scenario,
+every settler has an average of 50 bad relationships).
 
-And the table below shows the results. Please note that `switch` and `MAX-LEF` parameters are $n$.\
-As you can see, our [MAX-LEF dispatch method](#_max-lef_-dispatch) outperforms in terms
+## Results
+Please note that `switch` and `MAX-LEF` parameters are $n$.
+
+|                   | algorithm | average time (ms) | average output |
+|-------------------|-----------|-------------------|----------------|
+|                   | `linear`  | 0.080 ⭐           | 34             |
+| **benchmark100**  | `switch`  | 25.593            | 32             |
+|                   | `MAX-LEF` | 19.651            | 28  ⭐          |
+|                   |           |                   |
+|                   | `linear`  | 4.104 ⭐           | 208            |
+| **benchmark500**  | `switch`  | 2668.919          | 202            |
+|                   | `MAX-LEF` | 1855.284          | 188 ⭐          |
+|                   |           |                   |
+|                   | `linear`  | 15.261 ⭐          | 469            |
+| **benchmark1000** | `switch`  | 36762.073         | 463            |
+|                   | `MAX-LEF` | 20951.470         | 444 ⭐          |
+
+⭐ *is the best performance between algorithms.*
+## Performance comparison
+Key observations:
+- `linear` is the fastest but provides suboptimal results in terms of minimizing jealous settlers
+- `switch` minimizes jealousy well but is significantly slower, especially for larger colony sizes
+- `MAX-LEF` offers the best balance between execution time and output quality, making it the most practical solution for large colonies
+
+Our [MAX-LEF dispatch method](#_max-lef_-dispatch) outperforms in terms
 of minimizing the number of jealous settlers, for a lower execution time than the classic brute force switch algorithm.
-These figures show how $n$ instances of `MAX-LEF` can be an optimal compromise between execution time 
-and average minimization result. 
+These figures show how $n$ instances of `MAX-LEF` can be an optimal compromise between execution time
+and average minimization result.
 
-|                    | algorithm | average time (ms) | average output |
-|--------------------| --------- | ----------------- |----------------|
-|                    | `linear`    | 0.080             | 34             |
-| **benchmark100**   | `switch`    | 25.593            | 32             |
-|                    | `MAX-LEF`   | 19.651            | **28**         |
-|                    |||
-|                    | `linear`    | 4.104             | 208            |
-| **benchmark500**   | `switch`    | 2668.919          | 202            |
-|                    | `MAX-LEF`   | 1855.284          | **188**        |
-|                    |||
-|                    | `linear`    | 15.261            | 469            |
-| **benchmark1000**  | `switch`    | 36762.073         | 463            |
-|                    | `MAX-LEF`   | 20951.470         | **444**        |
-
+## Assets
 You can find the JMH output file [here](https://github.com/user-attachments/files/18187016/benchmark.txt).
 All input files are also available in the [assets folder](assets/benchmark).
 
 # Optimum resolution
-[MAX-LEF is a p-approximation algorithm](#_max-lef_-dispatch), meaning it gives the theoretical approximation bound for an instance of this problem.
-One way of solving this problem exactly would be to use of [integer (linear) programming](https://en.wikipedia.org/wiki/Integer_programming).
-[This paper of the MIT](https://web.mit.edu/15.053/www/AMP-Chapter-09.pdf) discusses these mathematical optimizations.
-In practice, a LP/MIP solver like [the GLPK](https://www.gnu.org/software/glpk/) (for this project [GLPK for Java](https://glpk-java.sourceforge.net/))
-could be used if the problem is correctly formulated as a LP problem.
+[MAX-LEF is a p-approximation algorithm](#_max-lef_-dispatch), meaning it provides a theoretical approximation bound for solving 
+instances of this problem efficiently. While it offers practical solutions with a good balance of performance and quality, 
+solving this problem exactly requires other, more computationally intensive approaches.
 
-However, it should be noted that this problem still remains NP-complete, and even with this kind of solver,
-one might come across instances that are hard to solve.
+## Solving the problem exactly
+One exact approach to solving this problem is through [integer (linear) programming](https://en.wikipedia.org/wiki/Integer_programming).
+These methods formulate the problem mathematically, enabling solvers to find the optimal solution. For a detailed 
+overview of mathematical optimization and integer programming, see [this paper of the MIT](https://web.mit.edu/15.053/www/AMP-Chapter-09.pdf).\
+In practice, a LP/MIP solver like [the GLPK](https://www.gnu.org/software/glpk/) could be used if the problem is correctly formulated as a LP problem.
+For Java-based projects like ours, [GLPK for Java](https://glpk-java.sourceforge.net/) provides a convenient interface to leverage these capabilities.
+
+## Challenges of exact solutions
+While ILP/MIP solvers can theoretically find exact solutions, it is important to note that:
+- **The problem remains NP-complete**: this means that as the size of the problem grows, the computational complexity 
+increases exponentially, making exact solutions impractical for large instances
+- **Hard-to-solve instances**: even with advanced solvers, certain problem instances may be computationally challenging, 
+requiring significant resources or resulting in long solving times
+
+## Practical implications
+Due to these limitations, approximation algorithms like **MAX-LEF** offer a more practical alternative. 
+They achieve near-optimal results with significantly lower computational overhead, and making them well-suited for 
+real-world applications where scalability and efficiency are critical.
