@@ -112,6 +112,8 @@ The benchmarks were conducted on the following system configuration:
 - **CPU**: 12th Gen Intel i7-1250U (12)
 - **OS**: Ubuntu 24.10 (x86_64)
 - **JDK**: openjdk 21.0.5
+- **JMH Core**: [1.37](https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core/1.37)
+- **JMH Annotation Processors**: [1.37](https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-generator-annprocess/1.37)
 
 ## Benchmark configuration
 The benchmarking process was performed using JMH with the following parameters:
@@ -147,6 +149,7 @@ Please note that `switch` and `MAX-LEF` parameters are $n$.
 |                   | `linear`  | 15.261 ⭐          | 469            |
 | **benchmark1000** | `switch`  | 36762.073         | 463            |
 |                   | `MAX-LEF` | 20951.470         | 444 ⭐          |
+
 ⭐ *is the best performance between algorithms.*
 ## Performance comparison
 Key observations:
