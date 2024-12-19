@@ -1,7 +1,6 @@
-package simulation;
+package main.simulation;
 
 import main.model.Settler;
-import main.simulation.Simulation;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

@@ -1,8 +1,6 @@
-package simulation;
+package main.simulation;
 
 import main.model.Settler;
-import main.simulation.Dispatcher;
-import main.simulation.Simulation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

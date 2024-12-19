@@ -1,4 +1,4 @@
-package file_manager;
+package main.file_manager;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
