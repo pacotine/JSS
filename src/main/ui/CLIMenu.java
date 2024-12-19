@@ -17,7 +17,7 @@ public abstract class CLIMenu {
      * Constructs a {@link CLIMenu} by initializing a {@link CLIReader}.
      */
     public CLIMenu() {
-        this.reader = new CLIReader();
+        this.reader = new CLIReader(System.in);
     }
 
     /**
