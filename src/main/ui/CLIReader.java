@@ -81,6 +81,10 @@ public class CLIReader implements Closeable {
         return args.toArray(new String[0]);
     }
 
+    /**
+     * Indicates whether this reader is open or not.
+     * @return {@code true} if this reader is open, {@code false} otherwise
+     */
     public boolean isOpen() {
         return isOpen;
     }
