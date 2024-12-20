@@ -96,7 +96,7 @@ public class Simulation {
      * Prints all the settlers in the colony.
      */
     public void showSettlers() {
-        System.out.println("(P = preferences, R = affectation, J = bad relations)\n");
+        System.out.println("\n(P = preferences, R = affectation, J = bad relations)\n");
         for(Settler s : settlers.values()) {
             System.out.println(s);
         }

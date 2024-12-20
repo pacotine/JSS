@@ -80,7 +80,6 @@ public abstract class CLIMenu {
             }
         } while(!correct);
 
-        simulation.showSettlers();
         simulation.showJealous();
     }
 

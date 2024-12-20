@@ -41,5 +41,6 @@ public class AffectationsWriter {
         }
 
         fileWriter.close();
+        System.out.println("Saved!");
     }
 }

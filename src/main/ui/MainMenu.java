@@ -66,7 +66,7 @@ public class MainMenu extends CLIMenu {
             correct = true;
             System.out.println("""
                     
-                    How do you to create you colony?\
+                    How do you want to create you colony?\
                     
                     \t1. manually\
                     
