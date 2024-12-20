@@ -74,6 +74,7 @@ public abstract class CLIMenu {
                     dispatcher.switchDispatch(simulation.getSettlers().size());
                     break;
                 default:
+                    System.out.println("Incorrect input : " + res);
                     correct = false;
                     break;
             }
