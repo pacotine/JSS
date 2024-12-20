@@ -21,7 +21,6 @@ public class MainMenu extends CLIMenu {
             init();
         }
         simulation.showSettlers();
-
         System.out.println("""
                 Please select an option :\
                 
