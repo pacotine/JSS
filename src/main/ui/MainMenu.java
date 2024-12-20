@@ -5,7 +5,7 @@ import main.simulation.Simulation;
 import java.util.Arrays;
 
 /**
- * This class manages interaction between the user and the simulation of resource allocation to a colony, manually defined.
+ * This class manages interaction between the user and the simulation of resource allocation to a colony, manually (or randomly) defined.
  */
 public class MainMenu extends CLIMenu {
 
@@ -90,6 +90,10 @@ public class MainMenu extends CLIMenu {
         } while(!correct);
     }
 
+    /**
+     * Asks the user the colony size ({@code n}) and the maximum number of bad relations (i.e. <i>density</i> {@code d}),
+     * where {@code d} should be smaller than or equal to {@code n}.
+     */
     private void askRandom() {
         boolean correct = false;
         int n = 0, d = 0;
