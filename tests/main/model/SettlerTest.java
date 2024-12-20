@@ -1,7 +1,5 @@
-package model;
+package main.model;
 
-import main.model.Resource;
-import main.model.Settler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

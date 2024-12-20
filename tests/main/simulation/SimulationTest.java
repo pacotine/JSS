@@ -1,17 +1,18 @@
-package simulation;
+package main.simulation;
 
 import main.model.Settler;
-import main.simulation.Simulation;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SimulationTest {
+public class SimulationTest {
 
     @Test
-    void switchAffectations() {
+    @DisplayName("Switch affectations")
+    public void switchAffectations() {
         Simulation simulation = new Simulation(4);
         simulation.affect("A1", "R1");
         simulation.affect("B1", "R2");
@@ -21,7 +22,8 @@ class SimulationTest {
     }
 
     @Test
-    void checkIfStable() {
+    @DisplayName("Check if a simulation is stable")
+    public void checkIfStable() {
         Simulation s1 = new Simulation(2);
         s1.setSettlerPreferences("A1", "R1", "R2");
         s1.setSettlerPreferences("B1", "R1", "R2");
@@ -32,7 +34,8 @@ class SimulationTest {
     }
 
     @Test
-    void affect() {
+    @DisplayName("Affect a resource")
+    public void affect() {
         Simulation simulation = new Simulation(4);
         simulation.affect("A1", "R1");
         assertEquals("R1", simulation.getSettlersMap().get("A1").getAffectation().getName());
@@ -40,7 +43,8 @@ class SimulationTest {
     }
 
     @Test
-    void setBadRelations() {
+    @DisplayName("Set a settler's bad relations")
+    public void setBadRelations() {
         Simulation simulation = new Simulation(4);
         simulation.setBadRelations("A1", "B1");
         Map<String, Settler> settlers = simulation.getSettlersMap();
@@ -50,7 +54,8 @@ class SimulationTest {
     }
 
     @Test
-    void jealousIfBadRelationHasAResourceWithHigherRank() {
+    @DisplayName("Test how jealousy works")
+    public void jealousIfBadRelationHasAResourceWithHigherRank() {
         Simulation simulation = new Simulation(2);
         simulation.setSettlerPreferences("A1", "R1", "R2");
         simulation.setSettlerPreferences("B1", "R1", "R2");
@@ -61,7 +66,8 @@ class SimulationTest {
     }
 
     @Test
-    void noJealousIfNoBadRelations() {
+    @DisplayName("A settler can't be jealous if it doesn't have bad relationships")
+    public void noJealousIfNoBadRelations() {
         Simulation simulation = new Simulation(2);
         simulation.setSettlerPreferences("A1", "R1", "R2");
         simulation.setSettlerPreferences("B1", "R1", "R2");
@@ -71,7 +77,8 @@ class SimulationTest {
     }
 
     @Test
-    void jealousSettlerCountedOnlyOnce() {
+    @DisplayName("A settler can't be jealous of several settlers")
+    public void jealousSettlerCountedOnlyOnce() {
         Simulation simulation = new Simulation(3);
         simulation.setSettlerPreferences("A1", "R1", "R2", "R3");
         simulation.setSettlerPreferences("B1", "R1", "R2", "R3");
@@ -85,7 +92,8 @@ class SimulationTest {
     }
 
     @Test
-    void clearClearsAffectations() {
+    @DisplayName("Clear a simulation")
+    public void clearAffectations() {
         Simulation simulation = new Simulation(2);
         simulation.affect("A1", "R1");
         simulation.affect("B1", "R2");

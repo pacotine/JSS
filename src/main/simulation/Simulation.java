@@ -218,10 +218,12 @@ public class Simulation {
      * @return {@code true} if the simulation is stable, {@code false} otherwise
      */
     public boolean checkIfStable() {
+        boolean correct = true;
+        int n = resources.size();
         for(Settler settler : settlers.values()) {
-            if(!settler.checkPreferences(resources.size())) return false;
+            if(!settler.checkPreferences(n)) correct = false;
         }
-        return true;
+        return correct;
     }
 
     /**

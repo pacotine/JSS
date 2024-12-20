@@ -1,6 +1,7 @@
 package main.ui;
 
 import java.io.Closeable;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,8 +19,8 @@ public class CLIReader implements Closeable {
     /**
      * Constructs a new {@link CLIReader} by initializing a new {@link Scanner} for the standard input stream.
      */
-    public CLIReader() {
-        this.scanner = new Scanner(System.in);
+    public CLIReader(InputStream inputStream) {
+        this.scanner = new Scanner(inputStream);
         this.isOpen = true;
     }
 
