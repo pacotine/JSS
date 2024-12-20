@@ -39,7 +39,8 @@ public class ColonyReaderTest {
         }
     }
 
-    private File correctFile, missingPointFile, invalidMethodNameFile, invalidMethodArgumentFile, invalidOrderFile;
+    private File correctFile, missingPointFile, invalidMethodNameFile, invalidMethodArgumentFile, invalidOrderFile,
+            missingResourceFile, invalidPreferencesCountFile;
     private static final String CORRECT_FILE_CONTENT = """
             colon(Dark Vador).
             colon(Dartagnan).
@@ -130,6 +131,41 @@ public class ColonyReaderTest {
             preferences(Zoooooo,Pomme,Big Mac,Orange,Tarte au citron).
     """;
 
+    private static final String MISSING_RESOURCE_CONTENT = """
+            colon(Dark Vador).
+            colon(Dartagnan).
+            colon(Zoooooo).
+            colon(Tartatin).
+            ressource(Pomme).
+            ressource(Tarte au citron).
+            ressource(Orange).
+            deteste(Dark Vador,Dartagnan).
+            deteste(Dark Vador,Zoooooo).
+            deteste(Dark Vador,Tartatin).
+            preferences(Dark Vador,Big Mac,Tarte au citron,Orange,Pomme).
+            preferences(Dartagnan,Big Mac,Orange,Tarte au citron,Pomme).
+            preferences(Tartatin,Pomme,Tarte au citron,Big Mac,Orange).
+            preferences(Zoooooo,Pomme,Big Mac,Orange,Tarte au citron).
+    """;
+
+    private static final String INVALID_PREFERENCES_CONTENT = """
+            colon(Dark Vador).
+            colon(Dartagnan).
+            colon(Zoooooo).
+            colon(Tartatin).
+            ressource(Pomme).
+            ressource(Big Mac).
+            ressource(Tarte au citron).
+            ressource(Orange).
+            deteste(Dark Vador,Dartagnan).
+            deteste(Dark Vador,Zoooooo).
+            deteste(Dark Vador,Tartatin).
+            preferences(Dark Vador,Big Mac,Tarte au citron,Orange,Pomme,More).
+            preferences(Dartagnan,Big Mac,Orange,Tarte au citron,Pomme).
+            preferences(Tartatin,Pomme,Tarte au citron,Big Mac,Orange).
+            preferences(Zoooooo,Pomme,Big Mac,Orange,Tarte au citron).
+    """;
+
     @BeforeEach
     public void setup() throws IOException {
         writeColonyFile(correctFile = File.createTempFile("simple_colony_file", ""), CORRECT_FILE_CONTENT);
@@ -137,6 +173,8 @@ public class ColonyReaderTest {
         writeColonyFile(invalidMethodNameFile = File.createTempFile("invalid_method_name_file", ""), INVALID_METHOD_NAME_CONTENT);
         writeColonyFile(invalidMethodArgumentFile = File.createTempFile("invalid_method_argument_file", ""), INVALID_METHOD_ARGUMENT_CONTENT);
         writeColonyFile(invalidOrderFile = File.createTempFile("invalid_order_file", ""), INVALID_METHODS_ORDER_CONTENT);
+        writeColonyFile(missingResourceFile = File.createTempFile("missing_resource_file", ""), MISSING_RESOURCE_CONTENT);
+        writeColonyFile(invalidPreferencesCountFile = File.createTempFile("invalid_preferences_file", ""), INVALID_PREFERENCES_CONTENT);
     }
 
     private void writeColonyFile(File file, String content) throws IOException {
@@ -159,7 +197,7 @@ public class ColonyReaderTest {
     }
 
     @Test
-    @DisplayName("The simulation read gives the expected simulation")
+    @DisplayName("Reader gives the expected simulation")
     public void readFileGivesCorrectSimulation() throws IOException {
         final int expectedN = 4;
         try(ColonyReader cr = new ColonyReader(correctFile)) {
@@ -180,11 +218,7 @@ public class ColonyReaderTest {
     @DisplayName("Reader detects missing point")
     public void readFileButMissingPoint() {
         ColonyFileFormatException.InvalidMethodException ie = assertThrowsExactly(
-                ColonyFileFormatException.InvalidMethodException.class, () -> {
-                try(ColonyReader cr = new ColonyReader(missingPointFile)) {
-                    cr.initSimulation();
-                }
-        });
+                ColonyFileFormatException.InvalidMethodException.class, () -> initReader(missingPointFile));
         assertEquals("At line 4 : Unknown method colon(Tartatin)\n" +
                 "        ressource(Pomme)", ie.getMessage());
     }
@@ -193,11 +227,7 @@ public class ColonyReaderTest {
     @DisplayName("Reader detects unknown method name")
     public void readFileButMethodDoesNotExist() {
         ColonyFileFormatException.InvalidMethodException ie = assertThrowsExactly(
-                ColonyFileFormatException.InvalidMethodException.class, () -> {
-                    try(ColonyReader cr = new ColonyReader(invalidMethodNameFile)) {
-                        cr.initSimulation();
-                    }
-                });
+                ColonyFileFormatException.InvalidMethodException.class, () -> initReader(invalidMethodNameFile));
         assertEquals("At line 10 : Unknown method hello(Dark Vador,Zoooooo)", ie.getMessage());
     }
 
@@ -205,11 +235,7 @@ public class ColonyReaderTest {
     @DisplayName("Reader detects invalid argument format")
     public void readFileButArgumentsAreInvalid() {
         ColonyFileFormatException.InvalidArgumentException ie = assertThrowsExactly(
-                ColonyFileFormatException.InvalidArgumentException.class, () -> {
-                    try(ColonyReader cr = new ColonyReader(invalidMethodArgumentFile)) {
-                        cr.initSimulation();
-                    }
-                });
+                ColonyFileFormatException.InvalidArgumentException.class, () -> initReader(invalidMethodArgumentFile));
         assertEquals("At line 5 : Invalid argument 'ressource(Pomme, 1, 2, 4)' is incorrect for ressource()", ie.getMessage());
     }
 
@@ -217,11 +243,29 @@ public class ColonyReaderTest {
     @DisplayName("Reader detects invalid methods order")
     public void readFileButMethodsOrderIsIncorrect() {
         ColonyFileFormatException ie = assertThrowsExactly(
-                ColonyFileFormatException.class, () -> {
-                    try(ColonyReader cr = new ColonyReader(invalidOrderFile)) {
-                        cr.initSimulation();
-                    }
-                });
+                ColonyFileFormatException.class, () -> initReader(invalidOrderFile));
         assertEquals("Settlers should be defined first", ie.getMessage());
+    }
+
+    @Test
+    @DisplayName("Reader detects invalid settlers' preferences count")
+    public void readFileButPreferencesArgumentsCountIsIncorrect() {
+        ColonyFileFormatException ie = assertThrowsExactly(
+                ColonyFileFormatException.class, () -> initReader(invalidPreferencesCountFile));
+        assertEquals("At line 12 : Extra 1 argument(s) for preferences(Dark Vador,Big Mac,Tarte au citron,Orange,Pomme,More)", ie.getMessage());
+    }
+
+    @Test
+    @DisplayName("Reader detects if settlers count is not equals to resources count")
+    public void readFileButResourcesCountNotEqualsToSettlersCount() {
+        ColonyFileFormatException ie = assertThrowsExactly(
+                ColonyFileFormatException.class, () -> initReader(missingResourceFile));
+        assertEquals("Number of resources must equal number of settlers, but there are 4 distinct names for 3 distinct resources", ie.getMessage());
+    }
+
+    private void initReader(File file) throws IOException {
+        try(ColonyReader cr = new ColonyReader(file)) {
+            cr.initSimulation();
+        }
     }
 }
