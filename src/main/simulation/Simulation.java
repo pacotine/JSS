@@ -56,7 +56,6 @@ public class Simulation {
      * @return the random simulation instance
      */
     public static Simulation random(int n, int d) {
-        //d is density of the graph
         assert d < n;
 
         Simulation simulation = new Simulation(n);

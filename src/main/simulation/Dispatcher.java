@@ -108,7 +108,6 @@ public class Dispatcher {
             }
 
             int j = simulation.getJealousNumber();
-            System.out.println("j = " + j + " | m = " + min);
             if(j < min) {
                 min = j;
                 for(Settler s : settlers) {
@@ -118,8 +117,6 @@ public class Dispatcher {
 
             simulation.clear();
         }
-
-        System.out.println("Best affectation found with j = " + min + " : " + bestAffectation);
         simulation.setAffectations(bestAffectation);
     }
 

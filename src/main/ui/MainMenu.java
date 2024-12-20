@@ -17,10 +17,7 @@ public class MainMenu extends CLIMenu {
      */
     @Override
     protected void display() {
-        if(simulation == null) {
-            init();
-            //initRandom();
-        }
+        init();
         simulation.showSettlers();
 
         System.out.println("""
@@ -64,13 +61,6 @@ public class MainMenu extends CLIMenu {
     private void init() {
         int n = askN();
         if(n != -1) this.simulation = new Simulation(n);
-    }
-
-    /**
-     * Initializes a random simulation with {@link Simulation#random(int, int)}.
-     */
-    private void initRandom() {
-        this.simulation = Simulation.random(15, 3);
     }
 
     /**
