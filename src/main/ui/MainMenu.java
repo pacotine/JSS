@@ -17,7 +17,9 @@ public class MainMenu extends CLIMenu {
      */
     @Override
     protected void display() {
-        init();
+        if(simulation == null) {
+            init();
+        }
         simulation.showSettlers();
 
         System.out.println("""
@@ -40,10 +42,10 @@ public class MainMenu extends CLIMenu {
             case INPUT_THREE:
                 if(simulation.checkIfStable()) {
                     System.out.println("""
-                            /!\\\
-                            
-                            Everything seems completed! Now, we're gonna find a solution
-                            """);
+                    /!\\\
+                    
+                    Everything seems completed! Now, we're gonna find a solution
+                    """);
                     showDispatcherMenu();
                     showSubMenu();
                 }
@@ -56,11 +58,60 @@ public class MainMenu extends CLIMenu {
     }
 
     /**
-     * Asks the user the number of settlers in the colony before initializing a classic simulation.
+     * Asks the user if the simulation should be created manually (max 26 settlers) or randomly (no limit).
      */
     private void init() {
-        int n = askN();
-        if(n != -1) this.simulation = new Simulation(n);
+        boolean correct;
+        do {
+            correct = true;
+            System.out.println("""
+                    
+                    How do you to create you colony?\
+                    
+                    \t1. manually\
+                    
+                    \t2. randomly"""
+            );
+            String res = reader.readInput();
+
+            switch(res) {
+                case INPUT_ONE:
+                    int n = askN();
+                    if(n != -1) this.simulation = new Simulation(n);
+                    break;
+                case INPUT_TWO:
+                    askRandom();
+                    break;
+                default:
+                    System.out.println("Invalid input (select 1 or 2)");
+                    correct = false;
+                    break;
+            }
+        } while(!correct);
+    }
+
+    private void askRandom() {
+        boolean correct = false;
+        int n = 0, d = 0;
+        do {
+            System.out.println("Enter the colony size and the maximum number of bad relations a settler might have : ");
+            try {
+                String[] res = reader.readArguments(2);
+                n = Integer.parseInt(res[0]);
+                d = Integer.parseInt(res[1]);
+
+                if(d > n) throw new InputException("The maximum number of bad relations cannot exceed the colony size (d <= n)",
+                        "d = " + d + "/" + "n = " + n);
+
+                correct = true;
+            } catch(NumberFormatException ne) {
+                System.out.println("Your inputs should be 2 natural numbers");
+            } catch(InputException ie) {
+                System.out.println(ie.getMessage());
+            }
+        } while(!correct);
+
+        this.simulation = Simulation.random(n, d);
     }
 
     /**
