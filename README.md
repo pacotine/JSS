@@ -30,7 +30,7 @@ Clone this repository and run the following commands in root folder downloaded:
 - For execution instructions, see [Run JAR](#run-jar) section
 - You can also run tests with `mvn test`
 ## Run JAR
-Download the latest version of the `.jar` file in [release section](https://github.com/pacotine/JSS/releases/tag/v1.0.0) of this repository then you can run the application
+Download the latest version of the `.jar` file in [release section](https://github.com/pacotine/JSS/releases) of this repository then you can run the application
 with the following command: 
 ```
 java -jar path/to/JSS.jar
