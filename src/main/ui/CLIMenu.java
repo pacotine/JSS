@@ -26,7 +26,7 @@ public abstract class CLIMenu {
     public void start() {
         System.out.println("""
                 Hello, welcome to the JSS program (CLI version) \\o/
-                If you want to close this program, enter 'quit'
+                If you want to close this program, enter 'quit' at any time
                 """);
         reader.setOnReaderClosedListener(() -> {
             System.out.println("Exiting menu... Bye!");
