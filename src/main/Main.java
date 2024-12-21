@@ -1,5 +1,6 @@
 package main;
 
+import main.file_manager.ColonyFileFormatException;
 import main.simulation.Simulation;
 import main.file_manager.ColonyReader;
 import main.ui.MainMenu;
@@ -31,6 +32,12 @@ public class Main {
                 fileMenu.start();
             } catch(IOException e) { //auto close
                 System.out.println("Path " + path + " invalid" + HELP_MESSAGE);
+            } catch(ColonyFileFormatException ci) {
+                System.out.println("Invalid colony file format!\n");
+                System.out.println(ci.getMessage());
+            } catch(IllegalArgumentException ie) {
+                System.out.println("Error while initializing the simulation\n");
+                System.out.println(ie.getMessage());
             }
         } else {
             System.out.println("Too many arguments" + HELP_MESSAGE);
